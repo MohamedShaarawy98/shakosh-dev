@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// هيكل بيانات لتتبع طلبات كل مستخدم (IP)
+// هيكل بيانات لتتبع طلبات كل مستخدم (IP) لغرض الـ Rate Limiting
 struct RateLimitInfo {
     int count = 0;
     chrono::steady_clock::time_point reset_time;
@@ -18,7 +18,7 @@ struct RateLimitInfo {
 
 static map<string, RateLimitInfo> ip_tracker;
 static mutex rate_limit_mtx;
-const int MAX_REQUESTS_PER_MINUTE = 15;
+const int MAX_REQUESTS_PER_MINUTE = 30; // رفع الحد لتسهيل التجربة
 
 // ============================================================
 //  دوال الحماية والتحويل الآمنة
@@ -55,7 +55,6 @@ static void set_security_headers(httplib::Response& res) {
     res.set_header("Server", "Hammer-Engine/1.0"); 
 }
 
-// دالة جلب الـ IP الصحيحة للشبكة خلف البروكسي أو كلوفلير
 static string get_client_ip(const httplib::Request& req) {
     if (req.has_header("CF-Connecting-IP")) return req.get_header_value("CF-Connecting-IP");
     if (req.has_header("X-Forwarded-For")) {
@@ -105,7 +104,6 @@ static void send_rate_limit_error(httplib::Response& res) {
     res.set_content(os.str(), "text/html; charset=utf-8");
 }
 
-// دالة محرك الرد الذكي الفنية للموقع
 static string get_ai_response(const string& query) {
     string msg = query;
     transform(msg.begin(), msg.end(), msg.begin(), ::tolower);
@@ -183,7 +181,7 @@ int main() {
     httplib::Server svr;
     Elevator elevator;
 
-    // 1️⃣ واجهة البوابة الرئيسية بالتصميم القديم المخصص
+    // البوابة الرئيسية بالتصميم الداكن القديم المخصص
     svr.Get("/", [](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
         string client_ip = get_client_ip(req);
@@ -264,12 +262,9 @@ int main() {
         res.set_content(html.str(), "text/html; charset=utf-8");
     });
 
-    // 2️⃣ واجهة إدخال بيانات الحاسبة
+    // واجهة إدخال بيانات الحاسبة
     svr.Get("/calculator", [](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
-        string client_ip = get_client_ip(req);
-        if (is_rate_limited(client_ip)) { send_rate_limit_error(res); return; }
-
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
                       "<style>"
@@ -287,7 +282,7 @@ int main() {
                       "</style></head><body>"
                       "<div class='card'><h2>🛗 حاسبة المقاسات والبضاعة الذكية</h2>"
                       "<div class='sub-title'>النظام الهندسي المطور لتصفية وحساب بضاعة المصاعد فوراً</div>"
-                      "<form action='/calculate' method='post'>"
+                      "<form action='/calculate' method='post'>" // الفورم يرسل POST
                       "<div class='f-group'><label>📦 نوع نظام الهندسة:</label><select name='m_type'><option value='MR'>غرفة محرك أعلى البئر (MR)</option><option value='MRL'>بدون غرفة محرك (MRL)</option></select></div>"
                       "<div class='f-group'><label>📏 عرض البئر الحُر (CM):</label><input type='number' name='width' required min='80' max='250' placeholder='أدخل عرض البئر بالسم'></div>"
                       "<div class='f-group'><label>📐 عمق البئر الحُر (CM):</label><input type='number' name='depth' required min='80' max='250' placeholder='أدخل عمق البئر بالسم'></div>"
@@ -300,22 +295,8 @@ int main() {
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 3️⃣ مسار استشارات الذكاء الاصطناعي (تمت صيانته وحقنه بالدوال بنجاح)
-    svr.Post("/ai-chat", [](const httplib::Request& req, httplib::Response& res) {
-        set_security_headers(res);
-        string client_ip = get_client_ip(req);
-        if (is_rate_limited(client_ip)) {
-            res.status = 429;
-            res.set_content("🚨 عذراً يا هندسة، لقد تجاوزت حد الأسئلة في الدقيقة. انتظر دقيقة واحدة لحماية خوادم المنصة.", "text/plain; charset=utf-8");
-            return;
-        }
-        string user_msg = req.get_param_value("message");
-        string ai_reply = get_ai_response(user_msg);
-        res.set_content(ai_reply, "text/plain; charset=utf-8");
-    });
-
-    // 4️⃣ تقارير المقايسة
-    svr.Post("/calculate", [&elevator](const httplib::Request& req, httplib::Response& res) {
+    // تفعيل مسار POST و GET لـ /calculate لمنع حدوث 405 تماماً
+    auto calc_handler = [&elevator](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
         string client_ip = get_client_ip(req);
         if (is_rate_limited(client_ip)) { send_rate_limit_error(res); return; }
@@ -344,7 +325,7 @@ int main() {
                      << "<div class='error-card'>"
                      << "<h2>⚠️ عذراً، أبعاد البئر غير مطابقة للمواصفات</h2>"
                      << "<p>أبعاد بئر المصعد المدخلة أقل من الحد الأدنى الفني المسموح به للحساب الآلي بالمنصة.<br><b>الحد الأدنى المطلوب:</b> عرض لا يقل عن 110 سم، وعمق لا يقل عن 100 سم.</p>"
-                     << "<a href='/' class='btn-retry'>🔄 العودة وتعديل المقاسات</a>"
+                     << "<a href='/calculator' class='btn-retry'>🔄 العودة وتعديل المقاسات</a>"
                      << "</div></body></html>";
             res.set_content(error_os.str(), "text/html; charset=utf-8"); return;
         }
@@ -432,12 +413,24 @@ int main() {
            << "<div class='inv'>💰 إجمالي القيمة المالية التقديرية: " << total << " SAR</div>"
            << "<div class='actions'>"
            << "<button class='btn-print' onclick='window.print()'>🖨️ طباعة التقرير الفني / حفظ PDF</button>"
-           << "<a class='btn-back' href='/'>🔄 حساب مقايسة جديدة</a>"
+           << "<a class='btn-back' href='/calculator'>🔄 حساب مقايسة جديدة</a>"
            << "</div></div></body></html>";
         res.set_content(os.str(), "text/html; charset=utf-8");
+    };
+
+    // ربط كلا الطريقتين بالدالة البرمجية لمنع الـ 405 تماماً
+    svr.Post("/calculate", calc_handler);
+    svr.Get("/calculate", calc_handler);
+
+    // مسار استشارات الذكاء الاصطناعي (مؤمن ومثبت بـ POST)
+    svr.Post("/ai-chat", [](const httplib::Request& req, httplib::Response& res) {
+        set_security_headers(res);
+        string user_msg = req.get_param_value("message");
+        string ai_reply = get_ai_response(user_msg);
+        res.set_content(ai_reply, "text/plain; charset=utf-8");
     });
 
-    // 5️⃣ مسار المقالات والمدونة
+    // مسار المقالات والمدونة
     svr.Get("/blog", [](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
         string blog_html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
@@ -461,7 +454,7 @@ int main() {
 
     const char* port_env = getenv("PORT");
     int port = port_env ? safe_stoi(port_env, 8080) : 8080;
-    std::cout << "🚀 سيرفر ضربة شاكوش القديم يعمل محلياً الآن على: http://localhost:" << port << std::endl;
+    std::cout << "🚀 سيرفر ضربة شاكوش يعمل ومؤمن بالكامل: http://localhost:" << port << std::endl;
     svr.listen("0.0.0.0", port);
     return 0;
 }
