@@ -55,6 +55,7 @@ static void set_security_headers(httplib::Response& res) {
     res.set_header("Server", "Hammer-Engine/1.0"); 
 }
 
+// دالة جلب الـ IP الصحيحة للشبكة خلف البروكسي أو كلوفلير
 static string get_client_ip(const httplib::Request& req) {
     if (req.has_header("CF-Connecting-IP")) return req.get_header_value("CF-Connecting-IP");
     if (req.has_header("X-Forwarded-For")) {
@@ -104,9 +105,7 @@ static void send_rate_limit_error(httplib::Response& res) {
     res.set_content(os.str(), "text/html; charset=utf-8");
 }
 
-// ============================================================
-//  محرك الرد الذكي المبدئي (AI Core)
-// ============================================================
+// دالة محرك الرد الذكي الفنية للموقع
 static string get_ai_response(const string& query) {
     string msg = query;
     transform(msg.begin(), msg.end(), msg.begin(), ::tolower);
@@ -286,7 +285,7 @@ int main() {
                       "button:hover{background: linear-gradient(135deg, #1a365d, #2b6cb0); transform: translateY(-1px); box-shadow:0 6px 20px rgba(26, 54, 93, 0.3);}"
                       ".btn-home{display:block; text-align:center; margin-top:20px; color:#3182ce; text-decoration:none; font-weight:700; font-size:14px;}"
                       "</style></head><body>"
-                      "<div class='card'><h2>🧮 حاسبة المقاسات والبضاعة الذكية</h2>"
+                      "<div class='card'><h2>🛗 حاسبة المقاسات والبضاعة الذكية</h2>"
                       "<div class='sub-title'>النظام الهندسي المطور لتصفية وحساب بضاعة المصاعد فوراً</div>"
                       "<form action='/calculate' method='post'>"
                       "<div class='f-group'><label>📦 نوع نظام الهندسة:</label><select name='m_type'><option value='MR'>غرفة محرك أعلى البئر (MR)</option><option value='MRL'>بدون غرفة محرك (MRL)</option></select></div>"
@@ -301,7 +300,7 @@ int main() {
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 3️⃣ مسار استشارات الذكاء الاصطناعي
+    // 3️⃣ مسار استشارات الذكاء الاصطناعي (تمت صيانته وحقنه بالدوال بنجاح)
     svr.Post("/ai-chat", [](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
         string client_ip = get_client_ip(req);
