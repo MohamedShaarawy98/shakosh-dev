@@ -316,6 +316,11 @@ static string call_ai_assistant(const string& user_message) {
     cli.set_read_timeout(25);
     cli.set_write_timeout(10);
 
+    // فرض التحقق من شهادة الأمان (TLS) بشكل صريح، بدلاً من الاعتماد على الإعدادات الافتراضية
+    // المسار ده قياسي على Ubuntu/Debian بعد تثبيت حزمة ca-certificates
+    cli.set_ca_cert_path("/etc/ssl/certs/ca-certificates.crt");
+    cli.enable_server_certificate_verification(true);
+
     httplib::Headers headers = {
         {"x-api-key", ANTHROPIC_API_KEY},
         {"anthropic-version", "2023-06-01"},
@@ -339,7 +344,8 @@ static string call_ai_assistant(const string& user_message) {
     auto res = cli.Post("/v1/messages", headers, body.dump(), "application/json");
 
     if (!res) {
-        cerr << "[AI API] لا يوجد رد من الخدمة (مشكلة شبكة محتملة)." << endl;
+        cerr << "[AI API] لا يوجد رد من الخدمة - تفاصيل الخطأ: "
+             << httplib::to_string(res.error()) << endl;
         return "عذراً، حدث خطأ تقني مؤقت في خدمة المساعد. حاول مرة أخرى بعد قليل.";
     }
     if (res->status != 200) {
