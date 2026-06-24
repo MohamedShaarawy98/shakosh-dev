@@ -147,22 +147,20 @@ static string get_modern_blue_css() {
 
            // ===== الهيدر =====
            ".navbar{background-color:var(--surface); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:50; box-shadow:0 4px 6px -1px rgba(0,0,0,0.15);}"
-           ".nav-right{display:flex; align-items:center; gap:26px;}"
+           ".nav-right{display:flex; align-items:center; gap:20px; flex-wrap:wrap;}"
            ".navbar-brand{display:flex; align-items:center; gap:10px; color:#ffffff; font-size:1.25rem; font-weight:800; text-decoration:none; padding-inline-end:22px; border-inline-end:1px solid var(--border);}"
            ".brand-mark{width:32px; height:32px; flex-shrink:0; border-radius:8px; background:linear-gradient(135deg, var(--accent), #0369a1); display:flex; align-items:center; justify-content:center;}"
            ".brand-mark svg{width:17px; height:17px; fill:#06121c;}"
-           ".nav-center{display:flex; align-items:center; gap:22px;}"
+           ".nav-center{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}"
            ".nav-link{color:#cbd5e1; font-size:1rem; font-weight:600; text-decoration:none; transition:color 0.15s;}"
            ".nav-link:hover{color:var(--accent);}"
-           ".nav-link-highlight{color:var(--accent); background:var(--accent-dim); padding:8px 16px; border-radius:8px; border:1px solid rgba(56,189,248,0.35); transition:0.2s;}"
-           ".nav-link-highlight:hover{background:rgba(56,189,248,0.22); color:var(--accent);}"
            ".nav-dropdown{position:relative;}"
            ".nav-dropdown summary{cursor:pointer; list-style:none; display:flex; align-items:center; gap:6px; color:#cbd5e1; font-weight:600; font-size:1rem; user-select:none;}"
            ".nav-dropdown summary::-webkit-details-marker{display:none;}"
            ".nav-dropdown summary:hover{color:var(--accent);}"
            ".nav-dropdown .chevron{width:13px; height:13px; fill:currentColor; transition:transform 0.2s;}"
            ".nav-dropdown[open] .chevron{transform:rotate(180deg);}"
-           ".dropdown-panel{position:absolute; inset-inline-start:0; top:calc(100% + 16px); display:flex; gap:30px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:22px 26px; min-width:380px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.45); z-index:60; animation:dropdownIn 0.18s ease;}"
+           ".dropdown-panel{position:absolute; inset-inline-start:0; top:calc(100% + 16px); display:flex; gap:30px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:18px 22px; min-width:190px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.45); z-index:60; animation:dropdownIn 0.18s ease;}"
            "@keyframes dropdownIn{from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);}}"
            ".dropdown-col{display:flex; flex-direction:column; gap:11px; min-width:150px;}"
            ".dropdown-heading{color:var(--accent); font-size:0.78rem; font-weight:700; letter-spacing:0.02em; margin-bottom:2px;}"
@@ -183,6 +181,7 @@ static string get_modern_blue_css() {
            ".mobile-panel a{padding:9px 6px; border-radius:6px;}"
            ".mobile-panel a:hover{background:rgba(56,189,248,0.1); color:var(--accent);}"
            ".mobile-panel .dropdown-heading{margin-top:10px; padding:0 6px;}"
+           ".mobile-divider{height:1px; background:var(--border); margin:8px 2px;}"
 
            // ===== الحاوي والبطاقات =====
            ".container{max-width:900px; margin:0 auto; padding:50px 20px; flex:1; width:100%;}"
@@ -233,23 +232,20 @@ static string get_navbar_html() {
            "    <a href='/' class='navbar-brand'><span class='brand-mark'>" + hammer_svg + "</span><span>ضربة شاكوش</span></a>"
            "    <div class='nav-center desktop-only'>"
            "      <a href='/' class='nav-link'>الرئيسية</a>"
-           "      <a href='/calculator' class='nav-link nav-link-highlight'>الحاسبة</a>"
+           "      <a href='/' class='nav-link'>مسارات</a>"
+           "      <a href='/calculator' class='nav-link'>كورسات</a>"
+           "      <a href='/calculator' class='nav-link'>مشاريع</a>"
+           "      <a href='/blog' class='nav-link'>كتب</a>"
+           "      <a href='/blog' class='nav-link'>مقالات</a>"
+           "      <a href='/calculator' class='nav-link'>أسئلة</a>"
            "      <details class='nav-dropdown'>"
            "        <summary>المزيد " + chevron_svg + "</summary>"
            "        <div class='dropdown-panel'>"
            "          <div class='dropdown-col'>"
-           "            <span class='dropdown-heading'>تعلّم ومحتوى</span>"
-           "            <a href='/'>مسارات</a>"
-           "            <a href='/calculator'>دورات</a>"
-           "            <a href='/calculator'>كورسات</a>"
-           "            <a href='/calculator'>مشاريع</a>"
-           "          </div>"
-           "          <div class='dropdown-col'>"
-           "            <span class='dropdown-heading'>المكتبة والدعم</span>"
-           "            <a href='/blog'>كتب</a>"
-           "            <a href='/blog'>مقالات</a>"
-           "            <a href='/calculator'>أسئلة</a>"
            "            <a href='/calculator'>أدوات</a>"
+           "            <a href='/contact'>التواصل</a>"
+           "            <a href='/support'>الدعم</a>"
+           "            <a href='/donate'>التبرع للموقع</a>"
            "          </div>"
            "        </div>"
            "      </details>"
@@ -262,17 +258,17 @@ static string get_navbar_html() {
            "      <summary class='nav-icon' title='القائمة'><svg viewBox='0 0 24 24'><path d='M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z'/></svg></summary>"
            "      <div class='mobile-panel'>"
            "        <a href='/'>الرئيسية</a>"
-           "        <a href='/calculator'>الحاسبة</a>"
-           "        <span class='dropdown-heading'>تعلّم ومحتوى</span>"
            "        <a href='/'>مسارات</a>"
-           "        <a href='/calculator'>دورات</a>"
            "        <a href='/calculator'>كورسات</a>"
            "        <a href='/calculator'>مشاريع</a>"
-           "        <span class='dropdown-heading'>المكتبة والدعم</span>"
            "        <a href='/blog'>كتب</a>"
            "        <a href='/blog'>مقالات</a>"
            "        <a href='/calculator'>أسئلة</a>"
+           "        <div class='mobile-divider'></div>"
            "        <a href='/calculator'>أدوات</a>"
+           "        <a href='/contact'>التواصل</a>"
+           "        <a href='/support'>الدعم</a>"
+           "        <a href='/donate'>التبرع للموقع</a>"
            "      </div>"
            "    </details>"
            "  </div>"
@@ -414,6 +410,59 @@ int main() {
                       "<h1>📚 الشروحات والمقالات الهندسية</h1>"
                       "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#94a3b8;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً.</p></div>"
                       "</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 5️⃣ صفحة التواصل
+    svr.Get("/contact", [](const httplib::Request&, httplib::Response& res) {
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:650px;'>"
+                      "<div class='card'><h2>📩 تواصل معنا</h2>"
+                      "<div class='sub-title'>عندك سؤال فني، اقتراح، أو لاحظت مشكلة في الحاسبة؟ تواصل معنا وهنرد عليك في أقرب وقت.</div>"
+                      "<a class='btn-action' href='mailto:contact@example.com' style='margin-bottom:14px; display:block;'>📧 راسلنا على البريد الإلكتروني</a>"
+                      "<p style='color:#8b96ab; font-size:0.9rem; text-align:center;'>* استبدل هذا البريد ببريدك الفعلي قبل النشر.</p>"
+                      "</div></div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 6️⃣ صفحة الدعم والمساعدة
+    svr.Get("/support", [](const httplib::Request&, httplib::Response& res) {
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:650px;'>"
+                      "<div class='card'><h2>🛟 الدعم والمساعدة</h2>"
+                      "<div class='sub-title'>محتاج مساعدة في استخدام حاسبة المقاسات أو فهم نتيجة التقرير؟</div>"
+                      "<p style='color:#e2e8f0; line-height:1.8; margin-bottom:24px;'>راجع قسم الأسئلة الشائعة أولاً، ولو المشكلة لسه قائمة تواصل معنا مباشرة وهنرجع لك بالتفاصيل.</p>"
+                      "<div class='actions'>"
+                      "<a class='btn-print' href='/calculator'>❓ الأسئلة الشائعة</a>"
+                      "<a class='btn-secondary' href='/contact'>📩 تواصل معنا</a>"
+                      "</div></div></div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 7️⃣ صفحة التبرع للموقع
+    svr.Get("/donate", [](const httplib::Request&, httplib::Response& res) {
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:650px;'>"
+                      "<div class='card'><h2>❤️ ادعم استمرار الموقع</h2>"
+                      "<div class='sub-title'>الموقع مجاني بالكامل لكل المهندسين والفنيين، ودعمك بيساعدنا نطوّر الحاسبة ونزيد المحتوى التعليمي.</div>"
+                      "<a class='btn-action' href='/contact' style='display:block;'>💳 طرق دعم الموقع</a>"
+                      "<p style='color:#8b96ab; font-size:0.9rem; text-align:center; margin-top:14px;'>* أضف هنا رابط وسيلة الدفع الفعلية (فودافون كاش، إنستاباي، إلخ) بدلاً من رابط التواصل.</p>"
+                      "</div></div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
