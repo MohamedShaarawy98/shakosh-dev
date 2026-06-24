@@ -103,7 +103,7 @@ public:
         else if (sa >= 167 && sa < 175)  return "Auto 90 SI || Auto 80 CO";
         else if (sa >= 160 && sa < 167)  return "Auto 90 SI || Auto 70 CO";
         else if (sa >= 155 && sa < 160)  return "Auto 80 SI || Auto 70 CO";
-        else if (sa >= 145 && sa < 155)  return "Auto 80 SI";
+        else if (sa >= 145 && sa < 155)  return "Auto 80 SI || S";
         else if (sa >= 128 && sa < 145)  return "Auto 70 SI";
         else if (sa >= 120 && sa < 128)  return "Semi Auto 80";
         else if (sa >= 110 && sa < 120)  return "Semi Auto 70";
@@ -126,86 +126,155 @@ public:
 };
 
 // ============================================================
-//  الستايل المحدث بالكامل ليتطابق مع ألوان وهيدر image_eb139e.png
+//  الستايل الاحترافي — هوية بصرية مستوحاة من المخططات الهندسية
+//  (شبكة Blueprint خفيفة + إطارات قياس بزوايا + أرقام Mono)
 // ============================================================
 static string get_modern_blue_css() {
     return "<style>"
            "*{box-sizing:border-box;}"
-           "body{font-family:'Cairo', sans-serif; background-color:#0b0f19; color:#f3f4f6; direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;}"
-           
-           // الهيدر المتطابق مع الصورة تماماً
-           ".navbar{background-color:#0f172a; border-bottom:1px solid #1e293b; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);}"
-           ".nav-right{display:flex; align-items:center; gap:25px;}"
-           ".navbar-brand{color:#ffffff; font-size:1.4rem; font-weight:700; text-decoration:none; margin-left:10px; border-left:1px solid #334155; padding-left:20px;}"
-           ".nav-links{display:flex; align-items:center; gap:20px; list-style:none; margin:0; padding:0;}"
-           ".nav-links a{color:#cbd5e1; font-size:1rem; font-weight:600; text-decoration:none; transition:0.2s;}"
-           ".nav-links a:hover{color:#38bdf8;}"
-           
-           // الأيقونات جهة اليسار مثل الصورة تماماً
-           ".nav-left{display:flex; align-items:center; gap:20px;}"
-           ".nav-icon{color:#94a3b8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; text-decoration:none;}"
-           ".nav-icon:hover{color:#38bdf8;}"
+           ":root{"
+           "--bg:#0a0e16; --surface:#121826; --surface-2:#1a2233; --border:#232c3f;"
+           "--accent:#38bdf8; --accent-dim:rgba(56,189,248,0.14); --accent-2:#f5a524;"
+           "--text:#f3f4f6; --text-muted:#8b96ab;"
+           "--font-display:'Cairo', sans-serif; --font-mono:'JetBrains Mono', 'Cairo', monospace;"
+           "}"
+           "@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}}"
+           "body{font-family:var(--font-display); background-color:var(--bg); color:var(--text); direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;"
+           "background-image:linear-gradient(rgba(56,189,248,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.045) 1px, transparent 1px);"
+           "background-size:30px 30px;}"
+           "a{outline-offset:3px;}"
+           ":focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}"
+
+           // ===== الهيدر =====
+           ".navbar{background-color:var(--surface); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:50; box-shadow:0 4px 6px -1px rgba(0,0,0,0.15);}"
+           ".nav-right{display:flex; align-items:center; gap:26px;}"
+           ".navbar-brand{display:flex; align-items:center; gap:10px; color:#ffffff; font-size:1.25rem; font-weight:800; text-decoration:none; padding-inline-end:22px; border-inline-end:1px solid var(--border);}"
+           ".brand-mark{width:32px; height:32px; flex-shrink:0; border-radius:8px; background:linear-gradient(135deg, var(--accent), #0369a1); display:flex; align-items:center; justify-content:center;}"
+           ".brand-mark svg{width:17px; height:17px; fill:#06121c;}"
+           ".nav-center{display:flex; align-items:center; gap:22px;}"
+           ".nav-link{color:#cbd5e1; font-size:1rem; font-weight:600; text-decoration:none; transition:color 0.15s;}"
+           ".nav-link:hover{color:var(--accent);}"
+           ".nav-link-highlight{color:var(--accent); background:var(--accent-dim); padding:8px 16px; border-radius:8px; border:1px solid rgba(56,189,248,0.35); transition:0.2s;}"
+           ".nav-link-highlight:hover{background:rgba(56,189,248,0.22); color:var(--accent);}"
+           ".nav-dropdown{position:relative;}"
+           ".nav-dropdown summary{cursor:pointer; list-style:none; display:flex; align-items:center; gap:6px; color:#cbd5e1; font-weight:600; font-size:1rem; user-select:none;}"
+           ".nav-dropdown summary::-webkit-details-marker{display:none;}"
+           ".nav-dropdown summary:hover{color:var(--accent);}"
+           ".nav-dropdown .chevron{width:13px; height:13px; fill:currentColor; transition:transform 0.2s;}"
+           ".nav-dropdown[open] .chevron{transform:rotate(180deg);}"
+           ".dropdown-panel{position:absolute; inset-inline-start:0; top:calc(100% + 16px); display:flex; gap:30px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:22px 26px; min-width:380px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.45); z-index:60; animation:dropdownIn 0.18s ease;}"
+           "@keyframes dropdownIn{from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);}}"
+           ".dropdown-col{display:flex; flex-direction:column; gap:11px; min-width:150px;}"
+           ".dropdown-heading{color:var(--accent); font-size:0.78rem; font-weight:700; letter-spacing:0.02em; margin-bottom:2px;}"
+           ".dropdown-panel a, .mobile-panel a{color:#e2e8f0; font-size:0.95rem; font-weight:600; text-decoration:none; transition:color 0.15s;}"
+           ".dropdown-panel a:hover{color:var(--accent);}"
+           ".desktop-only{display:flex;}"
+           ".mobile-only{display:none;}"
+           "@media (max-width:860px){.desktop-only{display:none;} .mobile-only{display:flex;} .navbar-brand span:last-child{font-size:1.05rem;}}"
+
+           // ===== الأيقونات والقائمة المنبثقة الجانبية (موبايل) =====
+           ".nav-left{display:flex; align-items:center; gap:18px;}"
+           ".nav-icon{color:#94a3b8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; text-decoration:none; list-style:none;}"
+           ".nav-icon::-webkit-details-marker{display:none;}"
+           ".nav-icon:hover{color:var(--accent);}"
            ".nav-icon svg{width:22px; height:22px; fill:currentColor;}"
-           
-           // حاوي البيانات والحاسبة
+           ".mobile-menu{position:relative;}"
+           ".mobile-panel{position:absolute; inset-inline-end:0; top:calc(100% + 14px); background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; display:flex; flex-direction:column; gap:4px; min-width:230px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.45); z-index:60; animation:dropdownIn 0.18s ease;}"
+           ".mobile-panel a{padding:9px 6px; border-radius:6px;}"
+           ".mobile-panel a:hover{background:rgba(56,189,248,0.1); color:var(--accent);}"
+           ".mobile-panel .dropdown-heading{margin-top:10px; padding:0 6px;}"
+
+           // ===== الحاوي والبطاقات =====
            ".container{max-width:900px; margin:0 auto; padding:50px 20px; flex:1; width:100%;}"
-           ".card{background:#1e293b; border:1px solid #334155; padding:40px; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); text-align:right;}"
-           ".card h2{color:#ffffff; font-size:1.6rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid #334155; padding-bottom:15px;}"
-           ".sub-title{color:#94a3b8; margin-bottom:35px; font-size:0.95rem; line-height:1.6;}"
+           ".card{position:relative; background:var(--surface); border:1px solid var(--border); padding:40px; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); text-align:right;}"
+           ".card::before, .nav-card::before{content:''; position:absolute; top:-1px; right:-1px; width:18px; height:18px; border-top:2px solid var(--accent); border-right:2px solid var(--accent); border-top-right-radius:6px; opacity:0.6;}"
+           ".card::after, .nav-card::after{content:''; position:absolute; bottom:-1px; left:-1px; width:18px; height:18px; border-bottom:2px solid var(--accent); border-left:2px solid var(--accent); border-bottom-left-radius:6px; opacity:0.6;}"
+           ".card h2{color:#ffffff; font-size:1.6rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid var(--border); padding-bottom:15px;}"
+           ".sub-title{color:var(--text-muted); margin-bottom:35px; font-size:0.95rem; line-height:1.6;}"
            ".f-group{margin-bottom:24px; text-align:right;}"
            ".f-group label{font-weight:600; color:#e2e8f0; display:block; margin-bottom:12px; font-size:0.95rem;}"
-           "input,select{width:100%; padding:14px; border:1px solid #334155; border-radius:8px; text-align:right; font-size:1rem; font-family:'Cairo', sans-serif; background-color:#0f172a; color:#f3f4f6; transition:0.3s; font-weight:600; padding-right:15px; direction:rtl;}"
-           "input:focus, select:focus{outline:none; border-color:#38bdf8; box-shadow:0 0 0 3px rgba(56,189,248,0.2);}"
+           "input,select{width:100%; padding:14px; border:1px solid var(--border); border-radius:8px; text-align:right; font-size:1rem; font-family:var(--font-display); background-color:var(--bg); color:var(--text); transition:0.3s; font-weight:600; padding-right:15px; direction:rtl;}"
+           "input:focus, select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.2);}"
            "button, .btn-action{background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:none; padding:16px; border-radius:8px; width:100%; font-size:1.1rem; font-weight:700; cursor:pointer; transition:0.3s; text-decoration:none; display:inline-block; text-align:center;}"
            "button:hover, .btn-action:hover{background:linear-gradient(135deg, #0369a1, #075985); transform:translateY(-1px);}"
-           
-           // الجداول والروابط التنافسية
-           ".table-container{width:100%; overflow-x:auto; background:#0f172a; border-radius:8px; border:1px solid #334155; margin-top:20px;}"
+
+           // ===== الجداول =====
+           ".table-container{position:relative; width:100%; overflow-x:auto; background:var(--bg); border-radius:8px; border:1px solid var(--border); margin-top:20px;}"
            ".tbl{width:100%; border-collapse:collapse; text-align:right;}"
-           ".tbl th{background:#1e293b; padding:15px; color:#38bdf8; font-weight:600; border-bottom:1px solid #334155; font-size:1rem; text-align:right; width:45%;}"
-           ".tbl td{padding:15px; border-bottom:1px solid #334155; color:#f3f4f6; font-size:1rem; font-weight:600; text-align:right;}"
+           ".tbl th{background:var(--surface); padding:15px; color:var(--accent); font-weight:600; border-bottom:1px solid var(--border); font-size:1rem; text-align:right; width:45%;}"
+           ".tbl td{padding:15px; border-bottom:1px solid var(--border); color:var(--text); font-size:1rem; font-weight:600; text-align:right; font-family:var(--font-mono);}"
            ".actions{display:flex; justify-content:space-between; margin-top:35px; gap:20px;}"
-           ".btn-print{background:linear-gradient(135deg, #16a34a, #15803d); color:white; border:none; padding:15px 25px; border-radius:8px; font-weight:700; cursor:pointer; flex:1; transition:0.3s; text-align:center; font-family:'Cairo';}"
+           ".btn-print{background:linear-gradient(135deg, #16a34a, #15803d); color:white; border:none; padding:15px 25px; border-radius:8px; font-weight:700; cursor:pointer; flex:1; transition:0.3s; text-align:center; font-family:var(--font-display);}"
            ".btn-print:hover{background:linear-gradient(135deg, #15803d, #166534);}"
-           ".btn-secondary{background:linear-gradient(135deg, #4f46e5, #4338ca); color:white; padding:15px 25px; border-radius:8px; font-weight:700; text-align:center; flex:1; transition:0.3s; display:inline-block; text-decoration:none; font-family:'Cairo';}"
+           ".btn-secondary{background:linear-gradient(135deg, #4f46e5, #4338ca); color:white; padding:15px 25px; border-radius:8px; font-weight:700; text-align:center; flex:1; transition:0.3s; display:inline-block; text-decoration:none; font-family:var(--font-display);}"
            ".btn-secondary:hover{background:linear-gradient(135deg, #4338ca, #3730a3);}"
            ".grid-nav{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; width:100%;}"
-           ".nav-card{background:#1e293b; border:1px solid #334155; padding:30px; border-radius:12px; text-decoration:none; color:#f3f4f6; transition:0.3s; display:flex; flex-direction:column; text-align:right;}"
-           ".nav-card:hover{border-color:#38bdf8; transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.2);}"
-           ".nav-card h3{color:#38bdf8; font-size:1.3rem; margin:0 0 12px 0;}"
-           ".nav-card p{color:#94a3b8; font-size:0.95rem; line-height:1.6; margin:0;}"
-           
-           // التذييل المطلوب
-           ".footer{margin-top:auto; padding:25px 0; font-size:15px; color:#94a3b8; text-align:center; border-top:1px solid #334155; background-color:#0f172a; font-weight:600;}"
-           "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000;}}"
+           ".nav-card{position:relative; background:var(--surface); border:1px solid var(--border); padding:30px; border-radius:12px; text-decoration:none; color:var(--text); transition:0.3s; display:flex; flex-direction:column; text-align:right;}"
+           ".nav-card:hover{border-color:var(--accent); transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.2);}"
+           ".nav-card h3{color:var(--accent); font-size:1.3rem; margin:0 0 12px 0;}"
+           ".nav-card p{color:var(--text-muted); font-size:0.95rem; line-height:1.6; margin:0;}"
+
+           // ===== التذييل =====
+           ".footer{margin-top:auto; padding:25px 0; font-size:15px; color:var(--text-muted); text-align:center; border-top:1px solid var(--border); background-color:var(--surface); font-weight:600;}"
+           "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .card::before, .card::after{display:none;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000; font-family:inherit;}}"
            "</style>";
 }
 
 // ============================================================
-//  بناء الهيدر المتطابق ديناميكياً
+//  بناء الهيدر — روابط مجمّعة داخل قائمة منبثقة واحدة (مزيد ▾)
+//  بدلاً من سرد كل الروابط في صف واحد
 // ============================================================
 static string get_navbar_html() {
+    const string hammer_svg = "<svg viewBox='0 0 24 24'><rect x='2.5' y='2.5' width='7.5' height='4.6' rx='1' transform='rotate(-45 6.25 4.8)'/><rect x='8.3' y='8.3' width='3' height='13' rx='1.2' transform='rotate(-45 9.8 14.8)'/></svg>";
+    const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
+
     return "<nav class='navbar'>"
            "  <div class='nav-right'>"
-           "    <a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-           "    <ul class='nav-links'>"
-           "      <li><a href='/'>مسارات</a></li>"
-           "      <li><a href='/calculator'>دورات</a></li>"
-           "      <li><a href='/calculator'>كورسات</a></li>"
-           "      <li><a href='/calculator'>مشاريع</a></li>"
-           "      <li><a href='/blog'>كتب</a></li>"
-           "      <li><a href='/blog'>مقالات</a></li>"
-           "      <li><a href='/calculator'>أسئلة</a></li>"
-           "      <li><a href='/calculator'>أدوات</a></li>"
-           "    </ul>"
+           "    <a href='/' class='navbar-brand'><span class='brand-mark'>" + hammer_svg + "</span><span>ضربة شاكوش</span></a>"
+           "    <div class='nav-center desktop-only'>"
+           "      <a href='/' class='nav-link'>الرئيسية</a>"
+           "      <a href='/calculator' class='nav-link nav-link-highlight'>الحاسبة</a>"
+           "      <details class='nav-dropdown'>"
+           "        <summary>المزيد " + chevron_svg + "</summary>"
+           "        <div class='dropdown-panel'>"
+           "          <div class='dropdown-col'>"
+           "            <span class='dropdown-heading'>تعلّم ومحتوى</span>"
+           "            <a href='/'>مسارات</a>"
+           "            <a href='/calculator'>دورات</a>"
+           "            <a href='/calculator'>كورسات</a>"
+           "            <a href='/calculator'>مشاريع</a>"
+           "          </div>"
+           "          <div class='dropdown-col'>"
+           "            <span class='dropdown-heading'>المكتبة والدعم</span>"
+           "            <a href='/blog'>كتب</a>"
+           "            <a href='/blog'>مقالات</a>"
+           "            <a href='/calculator'>أسئلة</a>"
+           "            <a href='/calculator'>أدوات</a>"
+           "          </div>"
+           "        </div>"
+           "      </details>"
+           "    </div>"
            "  </div>"
            "  <div class='nav-left'>"
-           // أيقونة البحث 🔍
            "    <a class='nav-icon' title='بحث'><svg viewBox='0 0 24 24'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg></a>"
-           // أيقونة الوضع الداكن/الهلال 🌙
-           "    <a class='nav-icon' title='الوضع الداكن' style='color:#00f0ff;'><svg viewBox='0 0 24 24'><path d='M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z'/></svg></a>"
-           // أيقونة الحساب الشخصي 👤
            "    <a class='nav-icon' title='الحساب الشخصي'><svg viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg></a>"
+           "    <details class='nav-dropdown mobile-menu mobile-only'>"
+           "      <summary class='nav-icon' title='القائمة'><svg viewBox='0 0 24 24'><path d='M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z'/></svg></summary>"
+           "      <div class='mobile-panel'>"
+           "        <a href='/'>الرئيسية</a>"
+           "        <a href='/calculator'>الحاسبة</a>"
+           "        <span class='dropdown-heading'>تعلّم ومحتوى</span>"
+           "        <a href='/'>مسارات</a>"
+           "        <a href='/calculator'>دورات</a>"
+           "        <a href='/calculator'>كورسات</a>"
+           "        <a href='/calculator'>مشاريع</a>"
+           "        <span class='dropdown-heading'>المكتبة والدعم</span>"
+           "        <a href='/blog'>كتب</a>"
+           "        <a href='/blog'>مقالات</a>"
+           "        <a href='/calculator'>أسئلة</a>"
+           "        <a href='/calculator'>أدوات</a>"
+           "      </div>"
+           "    </details>"
            "  </div>"
            "</nav>";
 }
@@ -237,7 +306,7 @@ int main() {
     // 1️⃣ الصفحة الرئيسية
     svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
                       + get_modern_blue_css() +
                       "</head><body>"
                       + get_navbar_html() +
@@ -255,7 +324,7 @@ int main() {
     // 2️⃣ واجهة الحاسبة
     svr.Get("/calculator", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
                       + get_modern_blue_css() +
                       "</head><body>"
                       + get_navbar_html() +
@@ -288,7 +357,9 @@ int main() {
         int oh = safe_stoi(req.get_param_value("overhead"), 400);
 
         if (w < 110 || d < 100) {
-            string err = "<html><head><meta charset='UTF-8'>" + get_modern_blue_css() + "</head><body>"
+            string err = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                         "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                         + get_modern_blue_css() + "</head><body>"
                          "<div style='display:flex; align-items:center; justify-content:center; min-height:100vh;'>"
                          "<div class='card' style='border-color:#ef4444; max-width:500px;'>"
                          "<h2 style='color:#ef4444;'>⚠️ الأبعاد المدخلة غير متوافقة</h2>"
@@ -309,7 +380,8 @@ int main() {
 
         string nonce = generate_nonce(); set_csp(res, nonce);
         ostringstream os;
-        os << "<html><head><meta charset='UTF-8'><link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
+        os << "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+           "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
            + get_modern_blue_css() + "</head><body>"
            << get_navbar_html()
            << "<div class='container' style='max-width:750px;'>"
@@ -334,7 +406,9 @@ int main() {
 
     // 4️⃣ صفحة المقالات
     svr.Get("/blog", [](const httplib::Request&, httplib::Response& res) {
-        string html = "<html><head><meta charset='UTF-8'>" + get_modern_blue_css() + "</head><body>"
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
                       + get_navbar_html() +
                       "<div class='container'>"
                       "<h1>📚 الشروحات والمقالات الهندسية</h1>"
