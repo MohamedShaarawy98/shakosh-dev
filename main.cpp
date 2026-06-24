@@ -1,5 +1,5 @@
 // ============================================================
-//  ضربة شاكوش — منصة هندسية بتصميم كلاسيكي راقٍ
+//  ضربة شاكوش — منصة هندسية بتصميم كلاسيكي راقٍ (بدون هيدر ترحيبي)
 // ============================================================
 #include "httplib.h"
 #include <iostream>
@@ -14,7 +14,6 @@
 
 using namespace std;
 
-// هيكل بيانات لتتبع طلبات كل مستخدم
 struct RateLimitInfo {
     int count = 0;
     chrono::steady_clock::time_point reset_time;
@@ -149,17 +148,9 @@ static string get_classic_css() {
     return "<style>"
            "*{box-sizing:border-box;}"
            "body{font-family:'Cairo', sans-serif; background-color:#141210; color:#F4EFEA; direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;}"
-           // شريط علوي كلاسيكي: تم إزالة القوائم والإبقاء على العنوان يميناً وكبيراً
            ".navbar{background-color:#1E1A17; border-bottom:2px solid #3A322C; padding:20px 40px; display:flex; justify-content:flex-start; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.4);}"
            ".navbar-brand{color:#D4AF37; font-size:2.1rem; font-weight:700; text-decoration:none; letter-spacing:1px; font-family:'Cairo', serif;}"
-           // الهيدر المطور بكلام وسهم متحرك
-           ".hero-section{text-align:center; padding:70px 20px; background:linear-gradient(180deg, #231F1C 0%, #141210 100%); border-bottom:1px solid #3A322C; position:relative;}"
-           ".hero-section h1{color:#D4AF37; font-size:2.8rem; margin:0 0 15px 0; font-weight:700;}"
-           ".hero-section p{color:#C8B195; font-size:1.2rem; margin:0 auto 20px auto; max-width:700px; line-height:1.8;}"
-           ".hero-arrow{font-size:2rem; color:#D4AF37; display:block; margin-top:15px; animation: bounce 2s infinite; font-weight:bold;}"
-           "@keyframes bounce {0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);}}"
-           // حاوي البيانات والحاسبة
-           ".container{max-width:900px; margin:0 auto; padding:40px 20px; flex:1; width:100%;}"
+           ".container{max-width:900px; margin:0 auto; padding:50px 20px; flex:1; width:100%;}"
            ".card{background:#1E1A17; border:1px solid #3A322C; border-top: 4px solid #D4AF37; padding:40px; border-radius:8px; box-shadow:0 15px 35px rgba(0,0,0,0.5); text-align:right;}"
            ".card h2{color:#D4AF37; font-size:1.7rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid #3A322C; padding-bottom:15px;}"
            ".sub-title{color:#A6927C; margin-bottom:35px; font-size:1rem; line-height:1.6;}"
@@ -169,7 +160,6 @@ static string get_classic_css() {
            "input:focus, select:focus{outline:none; border-color:#D4AF37; background-color:#1E1A17; box-shadow:0 0 0 3px rgba(212,175,55,0.15);}"
            "button, .btn-action{background:linear-gradient(135deg, #AA842C, #80601C); color:#F4EFEA; border:1px solid #D4AF37; padding:16px; border-radius:6px; width:100%; font-size:1.1rem; font-weight:700; cursor:pointer; transition:0.3s; text-decoration:none; display:inline-block; text-align:center;}"
            "button:hover, .btn-action:hover{background:linear-gradient(135deg, #80601C, #5C4514); transform:translateY(-1px); box-shadow:0 5px 15px rgba(212,175,55,0.2);}"
-           // الجداول
            ".table-container{width:100%; overflow-x:auto; background:#1E1A17; border-radius:6px; border:1px solid #3A322C; margin-top:20px;}"
            ".tbl{width:100%; border-collapse:collapse; text-align:right;}"
            ".tbl th{background:#2A2420; padding:15px; color:#D4AF37; font-weight:600; border-bottom:1px solid #3A322C; font-size:1rem; text-align:right; width:45%;}"
@@ -184,14 +174,13 @@ static string get_classic_css() {
            ".nav-card:hover{border-color:#D4AF37; transform:translateY(-3px); box-shadow:0 10px 20px rgba(212,175,55,0.05);}"
            ".nav-card h3{color:#D4AF37; font-size:1.3rem; margin:0 0 12px 0;}"
            ".nav-card p{color:#C8B195; font-size:0.95rem; line-height:1.6; margin:0;}"
-           // تذييل الصفحة المحدث بطلبك
            ".footer{margin-top:auto; padding:30px 0; font-size:15px; color:#D4AF37; text-align:center; border-top:1px solid #3A322C; background-color:#1E1A17; font-weight:600; letter-spacing:0.5px;}"
            "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000;}}"
            "</style>";
 }
 
 // ============================================================
-//  الدالة الرئيسية وتشغيل الخادم
+//  الدالة الرئيسية
 // ============================================================
 int main() {
     httplib::Server svr;
@@ -215,7 +204,7 @@ int main() {
         return httplib::Server::HandlerResponse::Unhandled;
     });
 
-    // 1️⃣ الصفحة الرئيسية
+    // 1️⃣ الصفحة الرئيسية (تم حذف قسم الـ Hero الترحيبي تماماً بطلبك)
     svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
@@ -224,11 +213,6 @@ int main() {
                       "<nav class='navbar'>"
                       "<a href='/' class='navbar-brand'>ضربة شاكوش</a>"
                       "</nav>"
-                      "<div class='hero-section'>"
-                      "<h1>منصة ضربة شاكوش الفنية</h1>"
-                      "<p>البيئة الرقمية الكلاسيكية المخصصة لحساب مقاسات آبار المصاعد وتصفية المكونات الميكانيكية بكل دقة وثقة</p>"
-                      "<span class='hero-arrow'>👇</span>"
-                      "</div>"
                       "<div class='container'>"
                       "<div class='grid-nav'>"
                       "<a href='/calculator' class='nav-card'><h3>🛗 حاسبة المقاسات الكلاسيكية</h3><p>ابدأ تصفية أبعاد البئر فوراً وحساب المقاسات الصافية للكابينة والثقل بضغطة واحدة من اليمين.</p></a>"
@@ -281,7 +265,7 @@ int main() {
                          "<div style='display:flex; align-items:center; justify-content:center; min-height:100vh;'>"
                          "<div class='card' style='border-color:#AA392C; max-width:500px;'>"
                          "<h2 style='color:#AA392C;'>⚠️ الأبعاد المدخلة غير متوافقة</h2>"
-                         "<p style='color:#C8B195;'>المقاسات الحالية أقل من الحد الأدنى القياسي المقبول بالمنصة (العرض الأدنى 110سم، والعمق 100سم).</p>"
+                         "<p style='color:#C8B195;'>المقاسات الحالية أقل من الحد الأدنى القياسية (العرض الأدنى 110سم، والعمق 100سم).</p>"
                          "<a href='/calculator' class='btn-action' style='background:#AA392C; border:none;'>🔄 العودة وتعديل المقاسات</a>"
                          "</div></div>"
                          "<div class='footer'>إنشاء : محمد الشعراوي</div>"
@@ -327,7 +311,7 @@ int main() {
                       "<nav class='navbar'><a href='/' class='navbar-brand'>ضربة شاكوش</a></nav>"
                       "<div class='container'>"
                       "<h1>📚 الشروحات والمقالات الهندسية</h1>"
-                      "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#C8B195;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً من واقع المهام الفنية الميدانية.</p></div>"
+                      "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#C8B195;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً.</p></div>"
                       "</div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
