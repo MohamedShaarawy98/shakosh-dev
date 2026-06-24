@@ -1,5 +1,5 @@
 // ============================================================
-//  ضربة شاكوش — منصة هندسية بتصميم كلاسيكي راقٍ (بدون هيدر ترحيبي)
+//  منصة ضربة شاكوش — هيدر احترافي مستوحى من image_eb139e.png
 // ============================================================
 #include "httplib.h"
 #include <iostream>
@@ -26,9 +26,6 @@ const int MAX_REQUESTS_PER_MINUTE = 12;
 static string CF_VERIFY_SECRET = getenv("CF_VERIFY_SECRET") ? getenv("CF_VERIFY_SECRET") : "";
 static string SECURE_HEADER_NAME = "X-Verify-Secret"; 
 
-// ============================================================
-//  دوال الحماية والتحويل الآمن
-// ============================================================
 static int safe_stoi(const string& s, int default_val = 0) {
     try { if (s.empty()) return default_val; return stoi(s); } catch (...) { return default_val; }
 }
@@ -36,9 +33,6 @@ static int safe_stoi(const string& s, int default_val = 0) {
 static float safe_stof(const string& s, float default_val = 0.0f) {
     try { if (s.empty()) return default_val; return stof(s); } catch (...) { return default_val; }
 }
-
-static int clamp_int(int v, int lo, int hi) { return max(lo, min(hi, v)); }
-static float clamp_float(float v, float lo, float hi) { return max(lo, min(hi, v)); }
 
 static string html_escape(const string& data) {
     string buffer; buffer.reserve(data.size());
@@ -68,7 +62,6 @@ static void set_security_headers(httplib::Response& res) {
     res.set_header("X-XSS-Protection", "1; mode=block");
     res.set_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
     res.set_header("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.set_header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
     res.set_header("Server", "Hammer-Engine/1.0");
 }
 
@@ -88,12 +81,6 @@ static void set_csp(httplib::Response& res, const string& script_nonce = "") {
 
 static string get_client_ip(const httplib::Request& req) {
     if (req.has_header("CF-Connecting-IP")) return req.get_header_value("CF-Connecting-IP");
-    if (req.has_header("X-Forwarded-For")) {
-        string xff = req.get_header_value("X-Forwarded-For");
-        size_t comma = xff.find(',');
-        if (comma != string::npos) return xff.substr(0, comma);
-        return xff;
-    }
     return req.remote_addr;
 }
 
@@ -107,9 +94,6 @@ static bool is_rate_limited(const string& ip) {
     return ip_tracker[ip].count > MAX_REQUESTS_PER_MINUTE;
 }
 
-// ============================================================
-//  كلاس المصعد الفني
-// ============================================================
 class Elevator {
 public:
     string get_door_type(int sa) {
@@ -142,41 +126,88 @@ public:
 };
 
 // ============================================================
-//  الستايل الكلاسيكي الفخم الموجه بالكامل لليمين (RTL)
+//  الستايل المحدث بالكامل ليتطابق مع ألوان وهيدر image_eb139e.png
 // ============================================================
-static string get_classic_css() {
+static string get_modern_blue_css() {
     return "<style>"
            "*{box-sizing:border-box;}"
-           "body{font-family:'Cairo', sans-serif; background-color:#141210; color:#F4EFEA; direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;}"
-           ".navbar{background-color:#1E1A17; border-bottom:2px solid #3A322C; padding:20px 40px; display:flex; justify-content:flex-start; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.4);}"
-           ".navbar-brand{color:#D4AF37; font-size:2.1rem; font-weight:700; text-decoration:none; letter-spacing:1px; font-family:'Cairo', serif;}"
+           "body{font-family:'Cairo', sans-serif; background-color:#0b0f19; color:#f3f4f6; direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;}"
+           
+           // الهيدر المتطابق مع الصورة تماماً
+           ".navbar{background-color:#0f172a; border-bottom:1px solid #1e293b; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);}"
+           ".nav-right{display:flex; align-items:center; gap:25px;}"
+           ".navbar-brand{color:#ffffff; font-size:1.4rem; font-weight:700; text-decoration:none; margin-left:10px; border-left:1px solid #334155; padding-left:20px;}"
+           ".nav-links{display:flex; align-items:center; gap:20px; list-style:none; margin:0; padding:0;}"
+           ".nav-links a{color:#cbd5e1; font-size:1rem; font-weight:600; text-decoration:none; transition:0.2s;}"
+           ".nav-links a:hover{color:#38bdf8;}"
+           
+           // الأيقونات جهة اليسار مثل الصورة تماماً
+           ".nav-left{display:flex; align-items:center; gap:20px;}"
+           ".nav-icon{color:#94a3b8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; text-decoration:none;}"
+           ".nav-icon:hover{color:#38bdf8;}"
+           ".nav-icon svg{width:22px; height:22px; fill:currentColor;}"
+           
+           // حاوي البيانات والحاسبة
            ".container{max-width:900px; margin:0 auto; padding:50px 20px; flex:1; width:100%;}"
-           ".card{background:#1E1A17; border:1px solid #3A322C; border-top: 4px solid #D4AF37; padding:40px; border-radius:8px; box-shadow:0 15px 35px rgba(0,0,0,0.5); text-align:right;}"
-           ".card h2{color:#D4AF37; font-size:1.7rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid #3A322C; padding-bottom:15px;}"
-           ".sub-title{color:#A6927C; margin-bottom:35px; font-size:1rem; line-height:1.6;}"
+           ".card{background:#1e293b; border:1px solid #334155; padding:40px; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); text-align:right;}"
+           ".card h2{color:#ffffff; font-size:1.6rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid #334155; padding-bottom:15px;}"
+           ".sub-title{color:#94a3b8; margin-bottom:35px; font-size:0.95rem; line-height:1.6;}"
            ".f-group{margin-bottom:24px; text-align:right;}"
-           ".f-group label{font-weight:600; color:#E6DCCF; display:block; margin-bottom:12px; font-size:1rem;}"
-           "input,select{width:100%; padding:14px; border:1px solid #4A3E36; border-radius:6px; text-align:right; font-size:1rem; font-family:'Cairo', sans-serif; background-color:#2A2420; color:#F4EFEA; transition:0.3s; font-weight:600; padding-right:15px; direction:rtl;}"
-           "input:focus, select:focus{outline:none; border-color:#D4AF37; background-color:#1E1A17; box-shadow:0 0 0 3px rgba(212,175,55,0.15);}"
-           "button, .btn-action{background:linear-gradient(135deg, #AA842C, #80601C); color:#F4EFEA; border:1px solid #D4AF37; padding:16px; border-radius:6px; width:100%; font-size:1.1rem; font-weight:700; cursor:pointer; transition:0.3s; text-decoration:none; display:inline-block; text-align:center;}"
-           "button:hover, .btn-action:hover{background:linear-gradient(135deg, #80601C, #5C4514); transform:translateY(-1px); box-shadow:0 5px 15px rgba(212,175,55,0.2);}"
-           ".table-container{width:100%; overflow-x:auto; background:#1E1A17; border-radius:6px; border:1px solid #3A322C; margin-top:20px;}"
+           ".f-group label{font-weight:600; color:#e2e8f0; display:block; margin-bottom:12px; font-size:0.95rem;}"
+           "input,select{width:100%; padding:14px; border:1px solid #334155; border-radius:8px; text-align:right; font-size:1rem; font-family:'Cairo', sans-serif; background-color:#0f172a; color:#f3f4f6; transition:0.3s; font-weight:600; padding-right:15px; direction:rtl;}"
+           "input:focus, select:focus{outline:none; border-color:#38bdf8; box-shadow:0 0 0 3px rgba(56,189,248,0.2);}"
+           "button, .btn-action{background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; border:none; padding:16px; border-radius:8px; width:100%; font-size:1.1rem; font-weight:700; cursor:pointer; transition:0.3s; text-decoration:none; display:inline-block; text-align:center;}"
+           "button:hover, .btn-action:hover{background:linear-gradient(135deg, #0369a1, #075985); transform:translateY(-1px);}"
+           
+           // الجداول والروابط التنافسية
+           ".table-container{width:100%; overflow-x:auto; background:#0f172a; border-radius:8px; border:1px solid #334155; margin-top:20px;}"
            ".tbl{width:100%; border-collapse:collapse; text-align:right;}"
-           ".tbl th{background:#2A2420; padding:15px; color:#D4AF37; font-weight:600; border-bottom:1px solid #3A322C; font-size:1rem; text-align:right; width:45%;}"
-           ".tbl td{padding:15px; border-bottom:1px solid #3A322C; color:#F4EFEA; font-size:1rem; font-weight:600; text-align:right;}"
+           ".tbl th{background:#1e293b; padding:15px; color:#38bdf8; font-weight:600; border-bottom:1px solid #334155; font-size:1rem; text-align:right; width:45%;}"
+           ".tbl td{padding:15px; border-bottom:1px solid #334155; color:#f3f4f6; font-size:1rem; font-weight:600; text-align:right;}"
            ".actions{display:flex; justify-content:space-between; margin-top:35px; gap:20px;}"
-           ".btn-print{background:linear-gradient(135deg, #2D5A27, #1E3F1A); color:white; border:1px solid #3B7A33; padding:15px 25px; border-radius:6px; font-weight:700; cursor:pointer; flex:1; transition:0.3s; text-align:center; font-family:'Cairo';}"
-           ".btn-print:hover{background:linear-gradient(135deg, #1E3F1A, #142B11);}"
-           ".btn-secondary{background:linear-gradient(135deg, #3A5FCD, #23439B); color:white; padding:15px 25px; border-radius:6px; font-weight:700; text-align:center; flex:1; transition:0.3s; display:inline-block; text-decoration:none; font-family:'Cairo';}"
-           ".btn-secondary:hover{background:linear-gradient(135deg, #23439B, #172D69);}"
+           ".btn-print{background:linear-gradient(135deg, #16a34a, #15803d); color:white; border:none; padding:15px 25px; border-radius:8px; font-weight:700; cursor:pointer; flex:1; transition:0.3s; text-align:center; font-family:'Cairo';}"
+           ".btn-print:hover{background:linear-gradient(135deg, #15803d, #166534);}"
+           ".btn-secondary{background:linear-gradient(135deg, #4f46e5, #4338ca); color:white; padding:15px 25px; border-radius:8px; font-weight:700; text-align:center; flex:1; transition:0.3s; display:inline-block; text-decoration:none; font-family:'Cairo';}"
+           ".btn-secondary:hover{background:linear-gradient(135deg, #4338ca, #3730a3);}"
            ".grid-nav{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:25px; width:100%;}"
-           ".nav-card{background:#1E1A17; border:1px solid #3A322C; padding:30px; border-radius:8px; text-decoration:none; color:#F4EFEA; transition:0.3s; display:flex; flex-direction:column; text-align:right;}"
-           ".nav-card:hover{border-color:#D4AF37; transform:translateY(-3px); box-shadow:0 10px 20px rgba(212,175,55,0.05);}"
-           ".nav-card h3{color:#D4AF37; font-size:1.3rem; margin:0 0 12px 0;}"
-           ".nav-card p{color:#C8B195; font-size:0.95rem; line-height:1.6; margin:0;}"
-           ".footer{margin-top:auto; padding:30px 0; font-size:15px; color:#D4AF37; text-align:center; border-top:1px solid #3A322C; background-color:#1E1A17; font-weight:600; letter-spacing:0.5px;}"
+           ".nav-card{background:#1e293b; border:1px solid #334155; padding:30px; border-radius:12px; text-decoration:none; color:#f3f4f6; transition:0.3s; display:flex; flex-direction:column; text-align:right;}"
+           ".nav-card:hover{border-color:#38bdf8; transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.2);}"
+           ".nav-card h3{color:#38bdf8; font-size:1.3rem; margin:0 0 12px 0;}"
+           ".nav-card p{color:#94a3b8; font-size:0.95rem; line-height:1.6; margin:0;}"
+           
+           // التذييل المطلوب
+           ".footer{margin-top:auto; padding:25px 0; font-size:15px; color:#94a3b8; text-align:center; border-top:1px solid #334155; background-color:#0f172a; font-weight:600;}"
            "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000;}}"
            "</style>";
+}
+
+// ============================================================
+//  بناء الهيدر المتطابق ديناميكياً
+// ============================================================
+static string get_navbar_html() {
+    return "<nav class='navbar'>"
+           "  <div class='nav-right'>"
+           "    <a href='/' class='navbar-brand'>ضربة شاكوش</a>"
+           "    <ul class='nav-links'>"
+           "      <li><a href='/'>مسارات</a></li>"
+           "      <li><a href='/calculator'>دورات</a></li>"
+           "      <li><a href='/calculator'>كورسات</a></li>"
+           "      <li><a href='/calculator'>مشاريع</a></li>"
+           "      <li><a href='/blog'>كتب</a></li>"
+           "      <li><a href='/blog'>مقالات</a></li>"
+           "      <li><a href='/calculator'>أسئلة</a></li>"
+           "      <li><a href='/calculator'>أدوات</a></li>"
+           "    </ul>"
+           "  </div>"
+           "  <div class='nav-left'>"
+           // أيقونة البحث 🔍
+           "    <a class='nav-icon' title='بحث'><svg viewBox='0 0 24 24'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg></a>"
+           // أيقونة الوضع الداكن/الهلال 🌙
+           "    <a class='nav-icon' title='الوضع الداكن' style='color:#00f0ff;'><svg viewBox='0 0 24 24'><path d='M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.8-11.8A10 10 0 0 1 12.3 2z'/></svg></a>"
+           // أيقونة الحساب الشخصي 👤
+           "    <a class='nav-icon' title='الحساب الشخصي'><svg viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg></a>"
+           "  </div>"
+           "</nav>";
 }
 
 // ============================================================
@@ -192,8 +223,7 @@ int main() {
 
         if (!CF_VERIFY_SECRET.empty()) {
             if (!req.has_header(SECURE_HEADER_NAME.c_str()) || req.get_header_value(SECURE_HEADER_NAME.c_str()) != CF_VERIFY_SECRET) {
-                res.status = 403;
-                res.set_content("Forbidden.", "text/plain");
+                res.status = 403; res.set_content("Forbidden.", "text/plain");
                 return httplib::Server::HandlerResponse::Handled;
             }
         }
@@ -204,19 +234,17 @@ int main() {
         return httplib::Server::HandlerResponse::Unhandled;
     });
 
-    // 1️⃣ الصفحة الرئيسية (تم حذف قسم الـ Hero الترحيبي تماماً بطلبك)
+    // 1️⃣ الصفحة الرئيسية
     svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
-                      + get_classic_css() +
+                      + get_modern_blue_css() +
                       "</head><body>"
-                      "<nav class='navbar'>"
-                      "<a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-                      "</nav>"
+                      + get_navbar_html() +
                       "<div class='container'>"
                       "<div class='grid-nav'>"
-                      "<a href='/calculator' class='nav-card'><h3>🛗 حاسبة المقاسات الكلاسيكية</h3><p>ابدأ تصفية أبعاد البئر فوراً وحساب المقاسات الصافية للكابينة والثقل بضغطة واحدة من اليمين.</p></a>"
-                      "<a href='/blog' class='nav-card'><h3>📚 المكتبة الهندسية والشروحات</h3><p>مراجعة شروحات التركيب الميكانيكي، صيانة الكروت، ومبادئ التحكم البرمجي للمحركات.</p></a>"
+                      "<a href='/calculator' class='nav-card'><h3>🛗 حاسبة المقاسات الهندسية</h3><p>ابدأ تصفية أبعاد البئر فوراً وحساب المقاسات الصافية للكابينة والثقل بضغطة واحدة.</p></a>"
+                      "<a href='/blog' class='nav-card'><h3>📚 المكتبة والشروحات الفنية</h3><p>مراجعة شروحات التركيب الميكانيكي، صيانة الكروت، ومبادئ التحكم البرمجي.</p></a>"
                       "</div>"
                       "</div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
@@ -228,12 +256,11 @@ int main() {
     svr.Get("/calculator", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
-                      + get_classic_css() +
+                      + get_modern_blue_css() +
                       "</head><body>"
-                      "<nav class='navbar'>"
-                      "<a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-                      "</nav>"
-                      "<div class='container' style='max-width:650px;'>""<div class='card'><h2>🧮 حاسبة مقاسات بئر المصعد البضاعة</h2>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:650px;'>"
+                      "<div class='card'><h2>🧮 حاسبة مقاسات بئر المصعد البضاعة</h2>"
                       "<div class='sub-title'>الرجاء إدخال المقاسات الحُرّة للبئر أدناه للبدء في الحساب التلقائي المباشر:</div>"
                       "<form action='/calculate' method='post'>"
                       "<div class='f-group'><label>👑 نوع النظام ونوع المحرك:</label><select name='m_type'><option value='MR'>غرفة محرك أعلى البئر (MR)</option><option value='MRL'>بدون غرفة محرك (MRL)</option></select></div>"
@@ -261,12 +288,12 @@ int main() {
         int oh = safe_stoi(req.get_param_value("overhead"), 400);
 
         if (w < 110 || d < 100) {
-            string err = "<html><head><meta charset='UTF-8'>" + get_classic_css() + "</head><body>"
+            string err = "<html><head><meta charset='UTF-8'>" + get_modern_blue_css() + "</head><body>"
                          "<div style='display:flex; align-items:center; justify-content:center; min-height:100vh;'>"
-                         "<div class='card' style='border-color:#AA392C; max-width:500px;'>"
-                         "<h2 style='color:#AA392C;'>⚠️ الأبعاد المدخلة غير متوافقة</h2>"
-                         "<p style='color:#C8B195;'>المقاسات الحالية أقل من الحد الأدنى القياسية (العرض الأدنى 110سم، والعمق 100سم).</p>"
-                         "<a href='/calculator' class='btn-action' style='background:#AA392C; border:none;'>🔄 العودة وتعديل المقاسات</a>"
+                         "<div class='card' style='border-color:#ef4444; max-width:500px;'>"
+                         "<h2 style='color:#ef4444;'>⚠️ الأبعاد المدخلة غير متوافقة</h2>"
+                         "<p style='color:#94a3b8;'>المقاسات الحالية أقل من الحد الأدنى القياسية (العرض الأدنى 110سم، والعمق 100سم).</p>"
+                         "<a href='/calculator' class='btn-action' style='background:#ef4444;'>🔄 العودة وتعديل المقاسات</a>"
                          "</div></div>"
                          "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                          "</body></html>";
@@ -283,17 +310,17 @@ int main() {
         string nonce = generate_nonce(); set_csp(res, nonce);
         ostringstream os;
         os << "<html><head><meta charset='UTF-8'><link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
-           + get_classic_css() + "</head><body>"
-           << "<nav class='navbar'><a href='/' class='navbar-brand'>ضربة شاكوش</a></nav>"
+           + get_modern_blue_css() + "</head><body>"
+           << get_navbar_html()
            << "<div class='container' style='max-width:750px;'>"
            << "<div class='card'><h2>📋 تقرير تصفية المقاسات النهائي</h2>"
            << "<div class='table-container'><table class='tbl'>"
-           << "<tr><th>نوع باب المصعد المتاح للمساحة:</th><td style='color:#D4AF37;'>" << door << "</td></tr>"
+           << "<tr><th>نوع باب المصعد المتاح للمساحة:</th><td style='color:#38bdf8;'>" << door << "</td></tr>"
            << "<tr><th>مقاس DBG الكابينة الصافي:</th><td>" << cabin_dbg << " CM</td></tr>"
            << "<tr><th>مقاس DBG ثقل الموازنة (CWT):</th><td>" << (cwt_dbg ? to_string(cwt_dbg) + " CM" : "مراجعة فنية") << "</td></tr>"
            << "<tr><th>صافي العرض الداخلي للكابينة:</th><td>" << cab_w << " CM</td></tr>"
            << "<tr><th>صافي العمق الداخلي للكابينة:</th><td>" << cab_d << " CM</td></tr>"
-           << "<tr><th>إجمالي مشوار البئر المحسوب:</th><td style='color:#D4AF37;'>" << h << " متر</td></tr>"
+           << "<tr><th>إجمالي مشوار البئر المحسوب:</th><td style='color:#38bdf8;'>" << h << " متر</td></tr>"
            << "</table></div>"
            << "<div class='actions'>"
            << "<button class='btn-print' id='pBtn'>🖨️ طباعة أو حفظ التقرير</button>"
@@ -307,11 +334,11 @@ int main() {
 
     // 4️⃣ صفحة المقالات
     svr.Get("/blog", [](const httplib::Request&, httplib::Response& res) {
-        string html = "<html><head><meta charset='UTF-8'>" + get_classic_css() + "</head><body>"
-                      "<nav class='navbar'><a href='/' class='navbar-brand'>ضربة شاكوش</a></nav>"
+        string html = "<html><head><meta charset='UTF-8'>" + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
                       "<div class='container'>"
                       "<h1>📚 الشروحات والمقالات الهندسية</h1>"
-                      "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#C8B195;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً.</p></div>"
+                      "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#94a3b8;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً.</p></div>"
                       "</div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
@@ -320,7 +347,7 @@ int main() {
 
     const char* port_env = getenv("PORT");
     int port = port_env ? safe_stoi(port_env, 8080) : 8080;
-    cout << "🚀 Classic Server standard running on port: " << port << endl;
+    cout << "🚀 Modern Blue Server running on port: " << port << endl;
     svr.listen("0.0.0.0", port);
     return 0;
 }
