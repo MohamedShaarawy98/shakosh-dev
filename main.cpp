@@ -149,26 +149,22 @@ static string get_classic_css() {
     return "<style>"
            "*{box-sizing:border-box;}"
            "body{font-family:'Cairo', sans-serif; background-color:#141210; color:#F4EFEA; direction:rtl; text-align:right; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;}"
-           // الشريط العلوي المعدل: الاسم يمين وكبير، القوائم يسار
-           ".navbar{background-color:#1E1A17; border-bottom:2px solid #3A322C; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.4);}"
+           // شريط علوي كلاسيكي: تم إزالة القوائم والإبقاء على العنوان يميناً وكبيراً
+           ".navbar{background-color:#1E1A17; border-bottom:2px solid #3A322C; padding:20px 40px; display:flex; justify-content:flex-start; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.4);}"
            ".navbar-brand{color:#D4AF37; font-size:2.1rem; font-weight:700; text-decoration:none; letter-spacing:1px; font-family:'Cairo', serif;}"
-           ".navbar-menu{display:flex; gap:25px;}"
-           ".navbar-link{color:#C8B195; text-decoration:none; font-weight:600; font-size:1.05rem; transition:0.3s; padding:8px 16px; border-radius:4px;}"
-           ".navbar-link:hover{color:#D4AF37; background-color:#2A2420;}"
            // الهيدر المطور بكلام وسهم متحرك
            ".hero-section{text-align:center; padding:70px 20px; background:linear-gradient(180deg, #231F1C 0%, #141210 100%); border-bottom:1px solid #3A322C; position:relative;}"
            ".hero-section h1{color:#D4AF37; font-size:2.8rem; margin:0 0 15px 0; font-weight:700;}"
            ".hero-section p{color:#C8B195; font-size:1.2rem; margin:0 auto 20px auto; max-width:700px; line-height:1.8;}"
            ".hero-arrow{font-size:2rem; color:#D4AF37; display:block; margin-top:15px; animation: bounce 2s infinite; font-weight:bold;}"
            "@keyframes bounce {0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);}}"
-           // حاوي البيانات والحاسبة لتبدأ من اليمين
+           // حاوي البيانات والحاسبة
            ".container{max-width:900px; margin:0 auto; padding:40px 20px; flex:1; width:100%;}"
            ".card{background:#1E1A17; border:1px solid #3A322C; border-top: 4px solid #D4AF37; padding:40px; border-radius:8px; box-shadow:0 15px 35px rgba(0,0,0,0.5); text-align:right;}"
            ".card h2{color:#D4AF37; font-size:1.7rem; margin-top:0; margin-bottom:15px; font-weight:700; border-bottom:1px solid #3A322C; padding-bottom:15px;}"
            ".sub-title{color:#A6927C; margin-bottom:35px; font-size:1rem; line-height:1.6;}"
            ".f-group{margin-bottom:24px; text-align:right;}"
            ".f-group label{font-weight:600; color:#E6DCCF; display:block; margin-bottom:12px; font-size:1rem;}"
-           // الحقول من اليمين
            "input,select{width:100%; padding:14px; border:1px solid #4A3E36; border-radius:6px; text-align:right; font-size:1rem; font-family:'Cairo', sans-serif; background-color:#2A2420; color:#F4EFEA; transition:0.3s; font-weight:600; padding-right:15px; direction:rtl;}"
            "input:focus, select:focus{outline:none; border-color:#D4AF37; background-color:#1E1A17; box-shadow:0 0 0 3px rgba(212,175,55,0.15);}"
            "button, .btn-action{background:linear-gradient(135deg, #AA842C, #80601C); color:#F4EFEA; border:1px solid #D4AF37; padding:16px; border-radius:6px; width:100%; font-size:1.1rem; font-weight:700; cursor:pointer; transition:0.3s; text-decoration:none; display:inline-block; text-align:center;}"
@@ -178,7 +174,6 @@ static string get_classic_css() {
            ".tbl{width:100%; border-collapse:collapse; text-align:right;}"
            ".tbl th{background:#2A2420; padding:15px; color:#D4AF37; font-weight:600; border-bottom:1px solid #3A322C; font-size:1rem; text-align:right; width:45%;}"
            ".tbl td{padding:15px; border-bottom:1px solid #3A322C; color:#F4EFEA; font-size:1rem; font-weight:600; text-align:right;}"
-           ".inv{background:rgba(212,175,55,0.05); padding:22px; border-radius:6px; border:1px dashed #D4AF37; margin-top:30px; text-align:center; font-size:1.25rem; font-weight:700; color:#D4AF37;}"
            ".actions{display:flex; justify-content:space-between; margin-top:35px; gap:20px;}"
            ".btn-print{background:linear-gradient(135deg, #2D5A27, #1E3F1A); color:white; border:1px solid #3B7A33; padding:15px 25px; border-radius:6px; font-weight:700; cursor:pointer; flex:1; transition:0.3s; text-align:center; font-family:'Cairo';}"
            ".btn-print:hover{background:linear-gradient(135deg, #1E3F1A, #142B11);}"
@@ -189,7 +184,9 @@ static string get_classic_css() {
            ".nav-card:hover{border-color:#D4AF37; transform:translateY(-3px); box-shadow:0 10px 20px rgba(212,175,55,0.05);}"
            ".nav-card h3{color:#D4AF37; font-size:1.3rem; margin:0 0 12px 0;}"
            ".nav-card p{color:#C8B195; font-size:0.95rem; line-height:1.6; margin:0;}"
-           ".footer{margin-top:auto; padding:30px 0; font-size:14px; color:#8C7B6C; text-align:center; border-top:1px solid #3A322C; background-color:#1E1A17; font-weight:600;}"
+           // تذييل الصفحة المحدث بطلبك
+           ".footer{margin-top:auto; padding:30px 0; font-size:15px; color:#D4AF37; text-align:center; border-top:1px solid #3A322C; background-color:#1E1A17; font-weight:600; letter-spacing:0.5px;}"
+           "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000;}}"
            "</style>";
 }
 
@@ -218,7 +215,7 @@ int main() {
         return httplib::Server::HandlerResponse::Unhandled;
     });
 
-    // 1️⃣ الصفحة الرئيسية بكلام وسهم في الهيدر
+    // 1️⃣ الصفحة الرئيسية
     svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
@@ -226,10 +223,6 @@ int main() {
                       "</head><body>"
                       "<nav class='navbar'>"
                       "<a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-                      "<div class='navbar-menu'>"
-                      "<a href='/calculator' class='navbar-link'>الحاسبة الهندسية</a>"
-                      "<a href='/blog' class='navbar-link'>المقالات الفنية</a>"
-                      "</div>"
                       "</nav>"
                       "<div class='hero-section'>"
                       "<h1>منصة ضربة شاكوش الفنية</h1>"
@@ -242,12 +235,12 @@ int main() {
                       "<a href='/blog' class='nav-card'><h3>📚 المكتبة الهندسية والشروحات</h3><p>مراجعة شروحات التركيب الميكانيكي، صيانة الكروت، ومبادئ التحكم البرمجي للمحركات.</p></a>"
                       "</div>"
                       "</div>"
-                      "<div class='footer'>تطوير وإشراف: مهندس محمد الشعراوي © 2026</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 2️⃣ واجهة الحاسبة (محاذاة كاملة من اليمين)
+    // 2️⃣ واجهة الحاسبة
     svr.Get("/calculator", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>"
@@ -255,10 +248,6 @@ int main() {
                       "</head><body>"
                       "<nav class='navbar'>"
                       "<a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-                      "<div class='navbar-menu'>"
-                      "<a href='/calculator' class='navbar-link' style='color:#D4AF37;'>الحاسبة الهندسية</a>"
-                      "<a href='/blog' class='navbar-link'>المقالات الفنية</a>"
-                      "</div>"
                       "</nav>"
                       "<div class='container' style='max-width:650px;'>""<div class='card'><h2>🧮 حاسبة مقاسات بئر المصعد البضاعة</h2>"
                       "<div class='sub-title'>الرجاء إدخال المقاسات الحُرّة للبئر أدناه للبدء في الحساب التلقائي المباشر:</div>"
@@ -271,7 +260,7 @@ int main() {
                       "<div class='f-group'><label>🏠 ارتفاع الدور الأخير Overhead (CM):</label><input type='number' name='overhead' required min='100' max='800' value='400'></div>"
                       "<button type='submit'>🏛️ إجراء التصفية وحساب الكميات</button></form>"
                       "</div></div>"
-                      "<div class='footer'>تطوير وإشراف: مهندس محمد الشعراوي © 2026</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -294,7 +283,9 @@ int main() {
                          "<h2 style='color:#AA392C;'>⚠️ الأبعاد المدخلة غير متوافقة</h2>"
                          "<p style='color:#C8B195;'>المقاسات الحالية أقل من الحد الأدنى القياسي المقبول بالمنصة (العرض الأدنى 110سم، والعمق 100سم).</p>"
                          "<a href='/calculator' class='btn-action' style='background:#AA392C; border:none;'>🔄 العودة وتعديل المقاسات</a>"
-                         "</div></div></body></html>";
+                         "</div></div>"
+                         "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                         "</body></html>";
             res.set_content(err, "text/html; charset=utf-8"); return;
         }
 
@@ -324,20 +315,22 @@ int main() {
            << "<button class='btn-print' id='pBtn'>🖨️ طباعة أو حفظ التقرير</button>"
            << "<a class='btn-secondary' href='/calculator'>🔄 حساب أبعاد جديدة</a>"
            << "</div></div></div>"
+           << "<div class='footer'>إنشاء : محمد الشعراوي</div>"
            << "<script nonce='" << nonce << "'>document.getElementById('pBtn').addEventListener('click', function(){ window.print(); });</script>"
            << "</body></html>";
         res.set_content(os.str(), "text/html; charset=utf-8");
     });
 
-    // 4️⃣ صفحة المقالات الشارحة
+    // 4️⃣ صفحة المقالات
     svr.Get("/blog", [](const httplib::Request&, httplib::Response& res) {
         string html = "<html><head><meta charset='UTF-8'>" + get_classic_css() + "</head><body>"
-                      "<nav class='navbar'><a href='/' class='navbar-brand'>ضربة شاكوش</a>"
-                      "<div class='navbar-menu'><a href='/calculator' class='navbar-link'>الحاسبة الهندسية</a></div></nav>"
+                      "<nav class='navbar'><a href='/' class='navbar-brand'>ضربة شاكوش</a></nav>"
                       "<div class='container'>"
                       "<h1>📚 الشروحات والمقالات الهندسية</h1>"
                       "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#C8B195;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً من واقع المهام الفنية الميدانية.</p></div>"
-                      "</div></body></html>";
+                      "</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
 
