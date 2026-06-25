@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <map>
+#include <vector>
 #include <chrono>
 #include <mutex>
 #include <random>
@@ -72,6 +73,7 @@ static void set_csp(httplib::Response& res, const string& script_nonce = "") {
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
                  "connect-src 'self'; "
+                 "frame-src https://www.youtube.com; "
                  "frame-ancestors 'none'; "
                  "base-uri 'self'; "
                  "form-action 'self';";
@@ -124,6 +126,62 @@ public:
         return (t == "MRL") ? h + 1.5f : h;
     }
 };
+
+// ============================================================
+//  نظام المحتوى التعليمي: مسارات (Tracks) + مقالات/فيديوهات (Lessons)
+//  لإضافة محتوى جديد عدّل فقط على الدوال get_tracks() و get_lessons()
+//  أدناه — كل الصفحات والروابط بتتولّد منهم تلقائياً.
+// ============================================================
+struct Lesson {
+    string slug;          // يُستخدم في الرابط: /lesson/<slug> (إنجليزي وبدون مسافات)
+    string track_slug;    // المسار اللي ينتمي له هذا المحتوى (لازم يطابق slug في get_tracks)
+    string type;          // "article" أو "video"
+    string title;
+    string summary;       // وصف قصير يظهر في كروت العرض
+    string content_html;  // نص المقال الكامل (HTML) — يُستخدم فقط لو type == "article"
+    string video_embed_url; // رابط embed الخاص باليوتيوب — يُستخدم فقط لو type == "video"
+    int order;             // ترتيب الحلقة داخل مسارها (1، 2، 3...)
+};
+
+struct Track {
+    string slug;        // يُستخدم في الرابط: /track/<slug>
+    string emoji;
+    string title;
+    string description;
+};
+
+static vector<Track> get_tracks() {
+    return {
+        { "basics", "🧱", "مسار الأساسيات", "المفاهيم الأولى لتصفية أبعاد بئر المصعد ومكوناته الرئيسية." },
+        { "doors",  "🚪", "مسار أبواب المصاعد", "أنواع الأبواب وأكواد الفتح المختلفة وإزاي تختار النوع المناسب." },
+    };
+}
+
+static vector<Lesson> get_lessons() {
+    return {
+        { "intro-shaft-dimensions", "basics", "article",
+          "مقدمة: فهم أبعاد بئر المصعد",
+          "الفرق بين البئر الحر والـ Pit والـ Overhead وأهميتهم في التصفية.",
+          "<p>بئر المصعد بيتكون من 3 قياسات أساسية لازم تكون دقيقة قبل أي تصفية: "
+          "العرض والعمق الحُرّين للبئر، عمق حفرة الـ Pit أسفل المحطة الأخيرة، وارتفاع الـ Overhead فوق آخر محطة.</p>"
+          "<p>أي خطأ بسيط في أي قياس من الثلاثة بيأثر مباشرة على نوع الباب المتاح ومقاس الكابينة الصافي، "
+          "وده اللي بتحسبه الحاسبة أوتوماتيك من غير الحاجة لجدول ورقي.</p>",
+          "", 1 },
+        { "door-types-explained", "doors", "video",
+          "شرح أنواع أبواب المصاعد Auto / Semi",
+          "فيديو يوضح الفرق بين CO و SI وإزاي تختار نوع الباب المناسب لمساحة بئرك.",
+          "",
+          "https://www.youtube.com/embed/REPLACE_WITH_VIDEO_ID", 1 },
+    };
+}
+
+static vector<Lesson> get_lessons_by_track(const string& track_slug) {
+    vector<Lesson> all = get_lessons();
+    vector<Lesson> filtered;
+    for (auto& l : all) if (l.track_slug == track_slug) filtered.push_back(l);
+    sort(filtered.begin(), filtered.end(), [](const Lesson& a, const Lesson& b) { return a.order < b.order; });
+    return filtered;
+}
 
 // ============================================================
 //  الستايل الاحترافي — هوية بصرية مستوحاة من المخططات الهندسية
@@ -213,6 +271,25 @@ static string get_modern_blue_css() {
            ".nav-card h3{color:var(--accent); font-size:1.3rem; margin:0 0 12px 0;}"
            ".nav-card p{color:var(--text-muted); font-size:0.95rem; line-height:1.6; margin:0;}"
 
+           // ===== محتوى المسارات والمقالات/الفيديوهات =====
+           ".section-intro{margin-bottom:30px; text-align:right;}"
+           ".section-intro h1{color:#ffffff; font-size:1.7rem; font-weight:800; margin:0 0 8px 0;}"
+           ".section-intro p{color:var(--text-muted); font-size:1rem; line-height:1.7; margin:0;}"
+           ".lesson-tag{display:inline-flex; align-items:center; gap:5px; font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:20px; margin-bottom:12px; width:fit-content;}"
+           ".tag-article{background:rgba(56,189,248,0.14); color:var(--accent);}"
+           ".tag-video{background:rgba(245,165,36,0.16); color:var(--accent-2);}"
+           ".video-embed{position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#000; margin:20px 0; border:1px solid var(--border);}"
+           ".video-embed iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}"
+           ".lesson-body{color:#e2e8f0; font-size:1.02rem; line-height:1.9;}"
+           ".lesson-body p{margin:0 0 16px 0;}"
+           ".lesson-body h3{color:#ffffff; font-size:1.2rem; margin:24px 0 12px 0;}"
+           ".track-list{display:flex; flex-direction:column; gap:14px; margin-top:10px;}"
+           ".track-item{display:flex; align-items:flex-start; gap:16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:18px 20px; text-decoration:none; transition:0.2s;}"
+           ".track-item:hover{border-color:var(--accent); transform:translateX(-3px);}"
+           ".track-order{flex-shrink:0; width:34px; height:34px; border-radius:8px; background:var(--surface-2); color:var(--accent); font-family:var(--font-mono); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:0.95rem;}"
+           ".track-item-title{color:#f3f4f6; font-weight:700; font-size:1.02rem; margin-bottom:4px;}"
+           ".track-item-summary{color:var(--text-muted); font-size:0.88rem; line-height:1.5;}"
+
            // ===== التذييل =====
            ".footer{margin-top:auto; padding:25px 0; font-size:15px; color:var(--text-muted); text-align:center; border-top:1px solid var(--border); background-color:var(--surface); font-weight:600;}"
            "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .card::before, .card::after{display:none;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000; font-family:inherit;}}"
@@ -232,7 +309,7 @@ static string get_navbar_html() {
            "    <a href='/' class='navbar-brand'><span class='brand-mark'>" + hammer_svg + "</span><span>ضربة شاكوش</span></a>"
            "    <div class='nav-center desktop-only'>"
            "      <a href='/' class='nav-link'>الرئيسية</a>"
-           "      <a href='/' class='nav-link'>مسارات</a>"
+           "      <a href='/paths' class='nav-link'>مسارات</a>"
            "      <a href='/calculator' class='nav-link'>كورسات</a>"
            "      <a href='/calculator' class='nav-link'>مشاريع</a>"
            "      <a href='/blog' class='nav-link'>كتب</a>"
@@ -258,7 +335,7 @@ static string get_navbar_html() {
            "      <summary class='nav-icon' title='القائمة'><svg viewBox='0 0 24 24'><path d='M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z'/></svg></summary>"
            "      <div class='mobile-panel'>"
            "        <a href='/'>الرئيسية</a>"
-           "        <a href='/'>مسارات</a>"
+           "        <a href='/paths'>مسارات</a>"
            "        <a href='/calculator'>كورسات</a>"
            "        <a href='/calculator'>مشاريع</a>"
            "        <a href='/blog'>كتب</a>"
@@ -400,16 +477,159 @@ int main() {
         res.set_content(os.str(), "text/html; charset=utf-8");
     });
 
-    // 4️⃣ صفحة المقالات
+    // 4️⃣ صفحة المقالات والفيديوهات (تُبنى تلقائياً من get_lessons())
     svr.Get("/blog", [](const httplib::Request&, httplib::Response& res) {
+        auto lessons = get_lessons();
+        ostringstream cards;
+        for (auto& l : lessons) {
+            string tag_class = (l.type == "video") ? "tag-video" : "tag-article";
+            string tag_label = (l.type == "video") ? "🎥 فيديو" : "📖 مقال";
+            cards << "<a href='/lesson/" << l.slug << "' class='nav-card'>"
+                  << "<span class='lesson-tag " << tag_class << "'>" << tag_label << "</span>"
+                  << "<h3>" << html_escape(l.title) << "</h3>"
+                  << "<p>" << html_escape(l.summary) << "</p>"
+                  << "</a>";
+        }
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
                       + get_modern_blue_css() + "</head><body>"
                       + get_navbar_html() +
                       "<div class='container'>"
-                      "<h1>📚 الشروحات والمقالات الهندسية</h1>"
-                      "<div class='card'><h2>قريباً: رفع المخططات التنفيذية والتركيبات</h2><p style='color:#94a3b8;'>انتظروا الشروحات التفصيلية لرفع وتصفية المواقع عملياً.</p></div>"
+                      "<div class='section-intro'><h1>📚 سلسلة تعلّم المصاعد</h1>"
+                      "<p>مقالات وفيديوهات تشرح تصفية وتركيب المصاعد خطوة بخطوة.</p></div>"
+                      "<div class='grid-nav'>" + cards.str() + "</div>"
                       "</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 4.1️⃣ عرض مقال أو فيديو واحد بالتفصيل: /lesson/<slug>
+    svr.Get(R"(/lesson/([a-zA-Z0-9\-]+))", [](const httplib::Request& req, httplib::Response& res) {
+        string slug = req.matches[1].str();
+        auto lessons = get_lessons();
+        auto it = find_if(lessons.begin(), lessons.end(), [&](const Lesson& l) { return l.slug == slug; });
+
+        if (it == lessons.end()) {
+            res.status = 404;
+            string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                          "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                          + get_modern_blue_css() + "</head><body>"
+                          + get_navbar_html() +
+                          "<div class='container' style='display:flex; align-items:center; justify-content:center; min-height:50vh;'>"
+                          "<div class='card' style='text-align:center; max-width:450px;'>"
+                          "<h2>⚠️ المحتوى غير موجود</h2>"
+                          "<p style='color:#94a3b8; margin-bottom:24px;'>الرابط ده غير متاح أو تم حذفه.</p>"
+                          "<a class='btn-secondary' href='/blog'>⬅️ كل المقالات والفيديوهات</a>"
+                          "</div></div>"
+                          "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                          "</body></html>";
+            res.set_content(html, "text/html; charset=utf-8");
+            return;
+        }
+
+        string tag_class = (it->type == "video") ? "tag-video" : "tag-article";
+        string tag_label = (it->type == "video") ? "🎥 فيديو" : "📖 مقال";
+
+        ostringstream body;
+        if (it->type == "video" && !it->video_embed_url.empty()) {
+            body << "<div class='video-embed'><iframe src='" << it->video_embed_url
+                 << "' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' "
+                    "allowfullscreen loading='lazy'></iframe></div>";
+        }
+        if (!it->content_html.empty()) {
+            body << "<div class='lesson-body'>" << it->content_html << "</div>";
+        }
+
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:750px;'>"
+                      "<div class='card'>"
+                      "<span class='lesson-tag " + tag_class + "'>" + tag_label + "</span>"
+                      "<h2>" + html_escape(it->title) + "</h2>"
+                      "<div class='sub-title'>" + html_escape(it->summary) + "</div>"
+                      + body.str() +
+                      "<div class='actions'><a class='btn-secondary' href='/blog'>⬅️ كل المقالات والفيديوهات</a></div>"
+                      "</div></div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 4.2️⃣ صفحة المسارات: تُبنى تلقائياً من get_tracks()
+    svr.Get("/paths", [](const httplib::Request&, httplib::Response& res) {
+        auto tracks = get_tracks();
+        ostringstream cards;
+        for (auto& t : tracks) {
+            cards << "<a href='/track/" << t.slug << "' class='nav-card'>"
+                  << "<h3>" << t.emoji << " " << html_escape(t.title) << "</h3>"
+                  << "<p>" << html_escape(t.description) << "</p>"
+                  << "</a>";
+        }
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container'>"
+                      "<div class='section-intro'><h1>🧭 مسارات التعلّم</h1>"
+                      "<p>كل مسار يجمع مجموعة مقالات وفيديوهات مرتبة بالترتيب الصحيح من الأساسي للمتقدم.</p></div>"
+                      "<div class='grid-nav'>" + cards.str() + "</div>"
+                      "</div>"
+                      "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                      "</body></html>";
+        res.set_content(html, "text/html; charset=utf-8");
+    });
+
+    // 4.3️⃣ عرض مسار واحد بكل محتواه مرتب: /track/<slug>
+    svr.Get(R"(/track/([a-zA-Z0-9\-]+))", [](const httplib::Request& req, httplib::Response& res) {
+        string slug = req.matches[1].str();
+        auto tracks = get_tracks();
+        auto trackIt = find_if(tracks.begin(), tracks.end(), [&](const Track& t) { return t.slug == slug; });
+
+        if (trackIt == tracks.end()) {
+            res.status = 404;
+            string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                          "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                          + get_modern_blue_css() + "</head><body>"
+                          + get_navbar_html() +
+                          "<div class='container' style='display:flex; align-items:center; justify-content:center; min-height:50vh;'>"
+                          "<div class='card' style='text-align:center; max-width:450px;'>"
+                          "<h2>⚠️ المسار غير موجود</h2>"
+                          "<p style='color:#94a3b8; margin-bottom:24px;'>الرابط ده غير متاح أو تم حذفه.</p>"
+                          "<a class='btn-secondary' href='/paths'>⬅️ كل المسارات</a>"
+                          "</div></div>"
+                          "<div class='footer'>إنشاء : محمد الشعراوي</div>"
+                          "</body></html>";
+            res.set_content(html, "text/html; charset=utf-8");
+            return;
+        }
+
+        auto lessons = get_lessons_by_track(slug);
+        ostringstream items;
+        for (auto& l : lessons) {
+            string tag_emoji = (l.type == "video") ? "🎥" : "📖";
+            items << "<a href='/lesson/" << l.slug << "' class='track-item'>"
+                  << "<span class='track-order'>" << l.order << "</span>"
+                  << "<div><div class='track-item-title'>" << tag_emoji << " " << html_escape(l.title) << "</div>"
+                  << "<div class='track-item-summary'>" << html_escape(l.summary) << "</div></div>"
+                  << "</a>";
+        }
+        if (lessons.empty()) {
+            items << "<p style='color:#8b96ab;'>لسه مفيش محتوى مضاف لهذا المسار.</p>";
+        }
+
+        string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                      "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
+                      + get_modern_blue_css() + "</head><body>"
+                      + get_navbar_html() +
+                      "<div class='container' style='max-width:700px;'>"
+                      "<div class='card'>"
+                      "<h2>" + trackIt->emoji + " " + html_escape(trackIt->title) + "</h2>"
+                      "<div class='sub-title'>" + html_escape(trackIt->description) + "</div>"
+                      "<div class='track-list'>" + items.str() + "</div>"
+                      "</div></div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
