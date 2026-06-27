@@ -1,6 +1,14 @@
-// ============================================================
-//  منصة ضربة شاكوش — هيدر احترافي مستوحى من image_eb139e.png
-// ============================================================
+
+/*                              <   وَأَن لَّيْسَ لِلإِنسَانِ إِلاَّ مَا سَعَى * وَأَنَّ سَعْيَهُ سَوْفَ يُرَى * ثُمَّ يُجْزَاهُ الْجَزَاء الأَوْفَى  >
+
+
+                                       ============================================================
+                                       =                  منصة ضربة شاكوش                        =
+                                       ============================================================
+
+
+ */          
+
 #include "httplib.h"
 #include <iostream>
 #include <string>
@@ -111,7 +119,10 @@ public:
         else if (sa >= 110 && sa < 120)  return "Semi Auto 70";
         return "تصفية خاصة - مراجعة يدوية";
     }
+
     int get_cabin_dbg(int w) { return w - 30; }
+
+
     int get_cwt_dbg(int v) {
         if (v >= 100 && v <= 110) return 72;
         if (v > 110 && v <= 120) return 82;
@@ -121,6 +132,7 @@ public:
     }
     int get_cabin_width(int cw) { return cw - 40; }
     int get_cabin_depth(int cd) { return cd - 60; }
+
     float get_shaft_height(float f, float pit_m, float overhead_m, string t) {
         float h = (f - 1) * 3.2f + pit_m + overhead_m;
         return (t == "MRL") ? h + 1.5f : h;
@@ -148,19 +160,23 @@ struct Track {
     string emoji;
     string title;
     string description;
+
+    
 };
 
 static vector<Track> get_tracks() {
     return {
-        { "basics", "🧱", "مسار الأساسيات", "المفاهيم الأولى لتصفية أبعاد بئر المصعد ومكوناته الرئيسية." },
-        { "doors",  "🚪", "مسار أبواب المصاعد", "أنواع الأبواب وأكواد الفتح المختلفة وإزاي تختار النوع المناسب." },
-        {"elzamly" , "" , " ,jhfkrwjgsjkgsjfhwjh", "الزاملي فوتو شوب"},
-    };
+        { "basics", "🧱", "مسار الأساسات", "المفاهيم الأولى لتصفية أبعاد بئر المصعد ومكوناته الرئيسية." },
+        { "doors",  "😪", "مسار أبواب المصاعد", "أنواع الأبواب وأكواد الفتح المختلفة وإزاي تختار النوع المناسب." },
+       
+
+    }; 
+
 }
 
 static vector<Lesson> get_lessons() {
     return {
-        { "intro-shaft-dimensions", "basics", "article",
+        { "intro-shaft-dimensions", "basics", "video",
           "مقدمة: فهم أبعاد بئر المصعد",
           "الفرق بين البئر الحر والـ Pit والـ Overhead وأهميتهم في التصفية.",
           "<p>بئر المصعد بيتكون من 3 قياسات أساسية لازم تكون دقيقة قبل أي تصفية: "
@@ -172,7 +188,7 @@ static vector<Lesson> get_lessons() {
           "شرح أنواع أبواب المصاعد Auto / Semi",
           "فيديو يوضح الفرق بين CO و SI وإزاي تختار نوع الباب المناسب لمساحة بئرك.",
           "",
-          "https://www.youtube.com/embed/REPLACE_WITH_VIDEO_ID", 1 },
+          "https://www.facebook.com", 1 },
     };
 }
 
@@ -645,7 +661,7 @@ int main() {
                       "<div class='container' style='max-width:650px;'>"
                       "<div class='card'><h2>📩 تواصل معنا</h2>"
                       "<div class='sub-title'>عندك سؤال فني، اقتراح، أو لاحظت مشكلة في الحاسبة؟ تواصل معنا وهنرد عليك في أقرب وقت.</div>"
-                      "<a class='btn-action' href='mailto:contact@example.com' style='margin-bottom:14px; display:block;'>📧 راسلنا على البريد الإلكتروني</a>"
+                      "<a class='btn-action' href='http://facebook.com' style='margin-bottom:14px; display:block;'>📧 راسلنا على البريد الإلكتروني</a>"
                       "<p style='color:#8b96ab; font-size:0.9rem; text-align:center;'>* استبدل هذا البريد ببريدك الفعلي قبل النشر.</p>"
                       "</div></div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
@@ -664,8 +680,8 @@ int main() {
                       "<div class='sub-title'>محتاج مساعدة في استخدام حاسبة المقاسات أو فهم نتيجة التقرير؟</div>"
                       "<p style='color:#e2e8f0; line-height:1.8; margin-bottom:24px;'>راجع قسم الأسئلة الشائعة أولاً، ولو المشكلة لسه قائمة تواصل معنا مباشرة وهنرجع لك بالتفاصيل.</p>"
                       "<div class='actions'>"
-                      "<a class='btn-print' href='/calculator'>❓ الأسئلة الشائعة</a>"
-                      "<a class='btn-secondary' href='/contact'>📩 تواصل معنا</a>"
+                      "<a class='btn-print' href='http://facebook.com'>❓ الأسئلة الشائعة</a>"
+                      "<a class='btn-secondary' href='http://facebook.com'>📩 تواصل معنا</a>"
                       "</div></div></div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
