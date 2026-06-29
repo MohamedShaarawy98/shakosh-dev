@@ -335,26 +335,25 @@ static string get_modern_blue_css() {
 //  بدلاً من سرد كل الروابط في صف واحد
 // ============================================================
 static string get_navbar_html() {
-    // 1. رابط الصورة المباشر من الجيت هاب بتاعك
     const string logo_url = "https://raw.githubusercontent.com/MohamedShaarawi98/shakosh-dev/main/channels4_profile.jpg"; 
+    const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
 
     return "<nav class='navbar'>"
            "  <div class='nav-right'>"
            "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' style='width:100%; height:100%; border-radius:6px; object-fit:cover;'></span><span>ضربة شاكوش</span></a>"
            "    <div class='nav-center desktop-only'>"
-      
            "      <a href='/' class='nav-link'>الرئيسية</a>"
            "      <a href='/paths' class='nav-link'>مسارات</a>"
-           "      <a href='/calculator' class='nav-link'>كورسات</a>"
-           "      <a href='/calculator' class='nav-link'>مشاريع</a>"
-           "      <a href='/blog' class='nav-link'>كتب</a>"
+           "      <a href='/paths' class='nav-link'>كورسات</a>"
+           "      <a href='#' class='nav-link'>مشاريع</a>"
+           "      <a href='#' class='nav-link'>كتب</a>"
            "      <a href='/blog' class='nav-link'>مقالات</a>"
-           "      <a href='/calculator' class='nav-link'>أسئلة</a>"
+           "      <a href='/support' class='nav-link'>أسئلة</a>"
            "      <details class='nav-dropdown'>"
            "        <summary>المزيد " + chevron_svg + "</summary>"
            "        <div class='dropdown-panel'>"
            "          <div class='dropdown-col'>"
-           "            <a href='/calculator'>أدوات</a>"
+           "            <a href='/calculator'>أدوات (الحاسبة)</a>"
            "            <a href='/contact'>التواصل</a>"
            "            <a href='/support'>الدعم</a>"
            "            <a href='/donate'>التبرع للموقع</a>"
@@ -371,13 +370,13 @@ static string get_navbar_html() {
            "      <div class='mobile-panel'>"
            "        <a href='/'>الرئيسية</a>"
            "        <a href='/paths'>مسارات</a>"
-           "        <a href='/calculator'>كورسات</a>"
-           "        <a href='/calculator'>مشاريع</a>"
-           "        <a href='/blog'>كتب</a>"
+           "        <a href='/paths'>كورسات</a>"
+           "        <a href='#'>مشاريع</a>"
+           "        <a href='#'>كتب</a>"
            "        <a href='/blog'>مقالات</a>"
-           "        <a href='/calculator'>أسئلة</a>"
+           "        <a href='/support'>أسئلة</a>"
            "        <div class='mobile-divider'></div>"
-           "        <a href='/calculator'>أدوات</a>"
+           "        <a href='/calculator'>أدوات (الحاسبة)</a>"
            "        <a href='/contact'>التواصل</a>"
            "        <a href='/support'>الدعم</a>"
            "        <a href='/donate'>التبرع للموقع</a>"
@@ -386,7 +385,6 @@ static string get_navbar_html() {
            "  </div>"
            "</nav>";
 }
-
 // ============================================================
 //  الدالة الرئيسية
 // ============================================================
