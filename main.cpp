@@ -189,6 +189,7 @@ static vector<Lesson> get_lessons() {
            {"darbat-shakosh-tow" ,"darbat" , "article", 
             "المبادئ الأولى لكهرباء وكروت المصاعد - الدرس 1",
             "نظرة عامة على لوحة التحكم والروابط الكهربائية وتغذية الفرامل ومغناطيس التهدئة والتوقف الفني.",
+         <img src='https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o' style='width:100%; max-width:600px; border-radius:8px; margin:20px 0; border:1px solid var(--border);' alt='خريطة المصعد'>
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
