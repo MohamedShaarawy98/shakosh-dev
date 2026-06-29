@@ -1,12 +1,8 @@
-
-/*                              <   وَأَن لَّيْسَ لِلإِنسَانِ إِلاَّ مَا سَعَى * وَأَنَّ سَعْيَهُ سَوْفَ يُرَى * ثُمَّ يُجْزَاهُ الْجَزَاء الأَوْفَى  >
-
+/*                      <  وَأَن لَّيْسَ لِلإِنسَانِ إِلاَّ مَا سَعَى * وَأَنَّ سَعْيَهُ سَوْفَ يُرَى * ثُمَّ يُجْزَاهُ الْجَزَاء الأَوْفَى  >
 
                                        ============================================================
-                                       =                  منصة ضربة شاكوش                        =
+                                       =                  منصة ضربة شاكوش                         =
                                        ============================================================
-
-
  */          
 
 #include "httplib.h"
@@ -77,7 +73,7 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
-                 "img-src 'self' https: data:; " // السطر ده بيسمح بتحميل الصور الخارجية بنجاح
+                 "img-src 'self' https: data:; " // تم التحديث للسماح بتحميل اللوجو الخارجي بنجاح
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
@@ -123,7 +119,6 @@ public:
 
     int get_cabin_dbg(int w) { return w - 30; }
 
-
     int get_cwt_dbg(int v) {
         if (v >= 100 && v <= 110) return 72;
         if (v > 110 && v <= 120) return 82;
@@ -140,40 +135,30 @@ public:
     }
 };
 
-// ============================================================
-//  نظام المحتوى التعليمي: مسارات (Tracks) + مقالات/فيديوهات (Lessons)
-//  لإضافة محتوى جديد عدّل فقط على الدوال get_tracks() و get_lessons()
-//  أدناه — كل الصفحات والروابط بتتولّد منهم تلقائياً.
-// ============================================================
 struct Lesson {
-    string slug;          // يُستخدم في الرابط: /lesson/<slug> (إنجليزي وبدون مسافات)
-    string track_slug;    // المسار اللي ينتمي له هذا المحتوى (لازم يطابق slug في get_tracks)
-    string type;          // "article" أو "video"
+    string slug;          
+    string track_slug;    
+    string type;          
     string title;
-    string summary;       // وصف قصير يظهر في كروت العرض
-    string content_html;  // نص المقال الكامل (HTML) — يُستخدم فقط لو type == "article"
-    string video_embed_url; // رابط embed الخاص باليوتيوب — يُستخدم فقط لو type == "video"
-    int order;             // ترتيب الحلقة داخل مسارها (1، 2، 3...)
+    string summary;       
+    string content_html;  
+    string video_embed_url; 
+    int order;             
 };
 
 struct Track {
-    string slug;        // يُستخدم في الرابط: /track/<slug>
+    string slug;        
     string emoji;
     string title;
     string description;
-
-    
 };
 
 static vector<Track> get_tracks() {
     return {
         { "basics", "🧱", "مسار الأساسات", "المفاهيم الأولى لتصفية أبعاد بئر المصعد ومكوناته الرئيسية." },
-        { "doors",  "😪", "مسار أبواب المصاعد", "أنواع الأبواب وأكواد الفتح المختلفة وإزاي تختار النوع المناسب." },
-
-        { "darbat" , "🔨" , "كورس كهرباء المصاعد "  , "الكورس متخصص في تعليم كبل شئ تخص كهرباء المصاعد"},
-
+        { "doors",  "🚪", "مسار أبواب المصاعد", "أنواع الأبواب وأكواد الفتح المختلفة وإزاي تختار النوع المناسب." },
+        { "darbat" , "🔨" , "كورس كهرباء المصاعد "  , "الكورس متخصص في تعليم كل شيء يخص كهرباء المصاعد"}
     }; 
-
 }
 
 static vector<Lesson> get_lessons() {
@@ -185,7 +170,7 @@ static vector<Lesson> get_lessons() {
           "العرض والعمق الحُرّين للبئر، عمق حفرة الـ Pit أسفل المحطة الأخيرة، وارتفاع الـ Overhead فوق آخر محطة.</p>"
           "<p>أي خطأ بسيط في أي قياس من الثلاثة بيأثر مباشرة على نوع الباب المتاح ومقاس الكابينة الصافي، "
           "وده اللي بتحسبه الحاسبة أوتوماتيك من غير الحاجة لجدول ورقي.</p>",
-          "https://www.youtube.com/embed/ZluG-pfc2HY",1},
+          "https://www.youtube.com/embed/ZluG-pfc2HY", 1},
 
         { "door-types-explained", "doors", "video",
           "شرح أنواع أبواب المصاعد Auto / Semi",
@@ -196,17 +181,16 @@ static vector<Lesson> get_lessons() {
           {"darbat-shakosh-one" ,"darbat" , "video", 
             "مقدمة كورس رقم 2 كهرباء المصعد",
             "اهمية ترتيب خطوات الكهرباء للامان والشغل النضيف",
-          "<p> اولا يتم  التاكد من كهرباء المبني سواء 220 || 380 لعمل الكنترول علي هذا الساس <p>"
-          "<p> ثانيا تركيب الكنترول وتوصيل الماكينه وقفل دوائر السيفتي {الشوكة  - الكالون - الاستوح} ثم التاكد من حركة المصعد <p>",
+          "<p> اولا يتم  التاكد من كهرباء المبني سواء 220 || 380 لعمل الكنترول علي هذا الساس </p>"
+          "<p> ثانيا تركيب الكنترول وتوصيل الماكينه وقفل دوائر السيفتي {الشوكة  - الكالون - الاستوح} ثم التاكد من حركة المصعد </p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 2},
 
            {"darbat-shakosh-tow" ,"darbat" , "article", 
             "مقدمة كورس رقم 1 كهرباء المصعد",
             "اهمية ترتيب خطوات الكهرباء للامان والشغل النضيف",
-          "<p> اولا يتم  التاكد من كهرباء المبني سواء 220 || 380 لعمل الكنترول علي هذا الساس <p>"
-          "<p> ثانيا تركيب الكنترول وتوصيل الماكينه وقفل دوائر السيفتي {الشوكة  - الكالون - الاستوح} ثم التاكد من حركة المصعد <p>",
-          "https://www.youtube.com/embed/ZluG-pfc2HY", 1},
-          
+          "<p> اولا يتم  التاكد من كهرباء المبني سواء 220 || 380 لعمل الكنترول علي هذا الساس </p>"
+          "<p> ثانيا تركيب الكنترول وتوصيل الماكينه وقفل دوائر السيفتي {الشوكة  - الكالون - الاستوح} ثم التاكد من حركة المصعد </p>",
+          "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
     };
 }
 
@@ -218,10 +202,6 @@ static vector<Lesson> get_lessons_by_track(const string& track_slug) {
     return filtered;
 }
 
-// ============================================================
-//  الستايل الاحترافي — هوية بصرية مستوحاة من المخططات الهندسية
-//  (شبكة Blueprint خفيفة + إطارات قياس بزوايا + أرقام Mono)
-// ============================================================
 static string get_modern_blue_css() {
     return "<style>"
            "*{box-sizing:border-box;}"
@@ -242,8 +222,7 @@ static string get_modern_blue_css() {
            ".navbar{background-color:var(--surface); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:50; box-shadow:0 4px 6px -1px rgba(0,0,0,0.15);}"
            ".nav-right{display:flex; align-items:center; gap:20px; flex-wrap:wrap;}"
            ".navbar-brand{display:flex; align-items:center; gap:10px; color:#ffffff; font-size:1.25rem; font-weight:800; text-decoration:none; padding-inline-end:22px; border-inline-end:1px solid var(--border);}"
-           ".brand-mark{width:32px; height:32px; flex-shrink:0; border-radius:8px; background:linear-gradient(135deg, var(--accent), #0369a1); display:flex; align-items:center; justify-content:center;}"
-           ".brand-mark svg{width:17px; height:17px; fill:#06121c;}"
+           ".brand-mark{width:32px; height:32px; flex-shrink:0; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;}"
            ".nav-center{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}"
            ".nav-link{color:#cbd5e1; font-size:1rem; font-weight:600; text-decoration:none; transition:color 0.15s;}"
            ".nav-link:hover{color:var(--accent);}"
@@ -263,7 +242,7 @@ static string get_modern_blue_css() {
            ".mobile-only{display:none;}"
            "@media (max-width:860px){.desktop-only{display:none;} .mobile-only{display:flex;} .navbar-brand span:last-child{font-size:1.05rem;}}"
 
-           // ===== الأيقونات والقائمة المنبثقة الجانبية (موبايل) =====
+           // ===== الجوانب والموبايل =====
            ".nav-left{display:flex; align-items:center; gap:18px;}"
            ".nav-icon{color:#94a3b8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s; text-decoration:none; list-style:none;}"
            ".nav-icon::-webkit-details-marker{display:none;}"
@@ -276,7 +255,7 @@ static string get_modern_blue_css() {
            ".mobile-panel .dropdown-heading{margin-top:10px; padding:0 6px;}"
            ".mobile-divider{height:1px; background:var(--border); margin:8px 2px;}"
 
-           // ===== الحاوي والبطاقات =====
+           // ===== الحاويات والبطاقات =====
            ".container{max-width:900px; margin:0 auto; padding:50px 20px; flex:1; width:100%;}"
            ".card{position:relative; background:var(--surface); border:1px solid var(--border); padding:40px; border-radius:12px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.3); text-align:right;}"
            ".card::before, .nav-card::before{content:''; position:absolute; top:-1px; right:-1px; width:18px; height:18px; border-top:2px solid var(--accent); border-right:2px solid var(--accent); border-top-right-radius:6px; opacity:0.6;}"
@@ -306,7 +285,7 @@ static string get_modern_blue_css() {
            ".nav-card h3{color:var(--accent); font-size:1.3rem; margin:0 0 12px 0;}"
            ".nav-card p{color:var(--text-muted); font-size:0.95rem; line-height:1.6; margin:0;}"
 
-           // ===== محتوى المسارات والمقالات/الفيديوهات =====
+           // ===== المحتوى الفني =====
            ".section-intro{margin-bottom:30px; text-align:right;}"
            ".section-intro h1{color:#ffffff; font-size:1.7rem; font-weight:800; margin:0 0 8px 0;}"
            ".section-intro p{color:var(--text-muted); font-size:1rem; line-height:1.7; margin:0;}"
@@ -331,31 +310,65 @@ static string get_modern_blue_css() {
            "</style>";
 }
 
-// ============================================================
-//  بناء الهيدر — روابط مجمّعة داخل قائمة منبثقة واحدة (مزيد ▾)
-//  بدلاً من سرد كل الروابط في صف واحد
-// ============================================================
-static void set_csp(httplib::Response& res, const string& script_nonce = "") {
-    string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'nonce-" + script_nonce + "'; ");
-    string csp = "default-src 'self'; "
-                 "img-src 'self' https: data:; " // السطر ده بيسمح بتحميل الصور الخارجية بنجاح
-                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-                 "font-src https://fonts.gstatic.com; "
-                 + script_src +
-                 "connect-src 'self'; "
-                 "frame-src https://www.youtube.com; "
-                 "frame-ancestors 'none'; "
-                 "base-uri 'self'; "
-                 "form-action 'self';";
-    res.headers.erase("Content-Security-Policy");
-    res.set_header("Content-Security-Policy", csp);
+// 3️⃣ إضافة دالة الهيدر المفقودة بالترتيب الصحيح (قبل الـ main)
+static string get_navbar_html() {
+    const string logo_url = "https://raw.githubusercontent.com/MohamedShaarawi98/shakosh-dev/main/channels4_profile.jpg"; 
+    const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
+
+    return "<nav class='navbar'>"
+           "  <div class='nav-right'>"
+           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' style='width:100%; height:100%; border-radius:6px; object-fit:cover;'></span><span>ضربة شاكوش</span></a>"
+           "    <div class='nav-center desktop-only'>"
+           "      <a href='/' class='nav-link'>الرئيسية</a>"
+           "      <a href='/paths' class='nav-link'>مسارات</a>"
+           "      <a href='/paths' class='nav-link'>كورسات</a>"
+           "      <a href='#' class='nav-link'>مشاريع</a>"
+           "      <a href='#' class='nav-link'>كتب</a>"
+           "      <a href='/blog' class='nav-link'>مقالات</a>"
+           "      <a href='/support' class='nav-link'>أسئلة</a>"
+           "      <details class='nav-dropdown'>"
+           "        <summary>المزيد " + chevron_svg + "</summary>"
+           "        <div class='dropdown-panel'>"
+           "          <div class='dropdown-col'>"
+           "            <a href='/calculator'>أدوات (الحاسبة)</a>"
+           "            <a href='/contact'>التواصل</a>"
+           "            <a href='/support'>الدعم</a>"
+           "            <a href='/donate'>التبرع للموقع</a>"
+           "          </div>"
+           "        </div>"
+           "      </details>"
+           "    </div>"
+           "  </div>"
+           "  <div class='nav-left'>"
+           "    <a class='nav-icon' title='بحث'><svg viewBox='0 0 24 24'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg></a>"
+           "    <a class='nav-icon' title='الحساب الشخصي'><svg viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg></a>"
+           "    <details class='nav-dropdown mobile-menu mobile-only'>"
+           "      <summary class='nav-icon' title='القائمة'><svg viewBox='0 0 24 24'><path d='M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z'/></svg></summary>"
+           "      <div class='mobile-panel'>"
+           "        <a href='/'>الرئيسية</a>"
+           "        <a href='/paths'>مسارات</a>"
+           "        <a href='/paths'>كورسات</a>"
+           "        <a href='#'>مشاريع</a>"
+           "        <a href='#'>كتب</a>"
+           "        <a href='/blog'>مقالات</a>"
+           "        <a href='/support'>أسئلة</a>"
+           "        <div class='mobile-divider'></div>"
+           "        <a href='/calculator'>أدوات (الحاسبة)</a>"
+           "        <a href='/contact'>التواصل</a>"
+           "        <a href='/support'>الدعم</a>"
+           "        <a href='/donate'>التبرع للموقع</a>"
+           "      </div>"
+           "    </details>"
+           "  </div>"
+           "</nav>";
 }
+
 // ============================================================
 //  الدالة الرئيسية
 // ============================================================
 int main() {
     httplib::Server svr;
-    Elevator elevator;
+    elevator elevator;
 
     svr.set_pre_routing_handler([](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
@@ -401,7 +414,7 @@ int main() {
                       + get_navbar_html() +
                       "<div class='container' style='max-width:650px;'>"
                       "<div class='card'><h2>🧮 حاسبة مقاسات بئر المصعد البضاعة</h2>"
-                      "<div class='sub-title'>الرجاء إدخال المقاسات الحُرّة للبئر أدناه للبدء في الحساب التلقائي المباشر:</div>"
+                      "<div class='sub-title'>الرجاء إدخال المقاسات الحُرّة للبئر أدناه للبدء in الحساب التلقائي المباشر:</div>"
                       "<form action='/calculate' method='post'>"
                       "<div class='f-group'><label>👑 نوع النظام ونوع المحرك:</label><select name='m_type'><option value='MR'>غرفة محرك أعلى البئر (MR)</option><option value='MRL'>بدون غرفة محرك (MRL)</option></select></div>"
                       "<div class='f-group'><label>📐 عرض البئر الحُر الصافي (CM):</label><input type='number' name='width' required min='80' max='250' placeholder='مثال: 160'></div>"
@@ -475,7 +488,7 @@ int main() {
         res.set_content(os.str(), "text/html; charset=utf-8");
     });
 
-    // 4️⃣ صفحة المقالات والفيديوهات (تُبنى تلقائياً من get_lessons())
+    // 4️⃣ صفحة المقالات والفيديوهات 
     svr.Get("/blog", [](const httplib::Request&, httplib::Response& res) {
         auto lessons = get_lessons();
         ostringstream cards;
@@ -502,7 +515,7 @@ int main() {
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 4.1️⃣ عرض مقال أو فيديو واحد بالتفصيل: /lesson/<slug>
+    // 4.1️⃣ عرض مقال أو فيديو واحد بالتفصيل
     svr.Get(R"(/lesson/([a-zA-Z0-9\-]+))", [](const httplib::Request& req, httplib::Response& res) {
         string slug = req.matches[1].str();
         auto lessons = get_lessons();
@@ -556,7 +569,7 @@ int main() {
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 4.2️⃣ صفحة المسارات: تُبنى تلقائياً من get_tracks()
+    // 4.2️⃣ صفحة المسارات
     svr.Get("/paths", [](const httplib::Request&, httplib::Response& res) {
         auto tracks = get_tracks();
         ostringstream cards;
@@ -580,7 +593,7 @@ int main() {
         res.set_content(html, "text/html; charset=utf-8");
     });
 
-    // 4.3️⃣ عرض مسار واحد بكل محتواه مرتب: /track/<slug>
+    // 4.3️⃣ عرض مسار واحد بكل محتواه مرتب
     svr.Get(R"(/track/([a-zA-Z0-9\-]+))", [](const httplib::Request& req, httplib::Response& res) {
         string slug = req.matches[1].str();
         auto tracks = get_tracks();
@@ -679,7 +692,7 @@ int main() {
                       "<div class='card'><h2>❤️ ادعم استمرار الموقع</h2>"
                       "<div class='sub-title'>الموقع مجاني بالكامل لكل المهندسين والفنيين، ودعمك بيساعدنا نطوّر الحاسبة ونزيد المحتوى التعليمي.</div>"
                       "<a class='btn-action' href='/contact' style='display:block;'>💳 طرق دعم الموقع</a>"
-                      "<p style='color:#8b96ab; font-size:0.9rem; text-align:center; margin-top:14px;'>* أضف هنا رابط وسيلة الدفع الفعلية (فودافون كاش، إنستاباي، إلخ) بدلاً من رابط التواصل.</p>"
+                      "<p style='color:#8b96ab; font-size:0.9rem; text-align:center;'>* أضف هنا رابط وسيلة الدفع الفعلية (فودافون كاش، إنستاباي، إلخ) بدلاً من رابط التواصل.</p>"
                       "</div></div>"
                       "<div class='footer'>إنشاء : محمد الشعراوي</div>"
                       "</body></html>";
