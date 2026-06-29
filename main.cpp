@@ -337,10 +337,7 @@ static string get_modern_blue_css() {
 static string get_navbar_html() {
 const string logo_url = "https://github.com/MohamedShaarawy98/shakosh-dev/blob/main/channels4_profile.jpg";  
   const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
-
-    return "<nav class='navbar'>"
-           "  <div class='nav-right'>"
-           "    <a href='/' class='navbar-brand'><span class='brand-mark'>" + hammer_svg + "</span><span>ضربة شاكوش</span></a>"
+"    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' style='width:100%; height:100%; border-radius:6px; object-fit:cover;'></span><span>ضربة شاكوش</span></a>"
            "    <div class='nav-center desktop-only'>"
            "      <a href='/' class='nav-link'>الرئيسية</a>"
            "      <a href='/paths' class='nav-link'>مسارات</a>"
