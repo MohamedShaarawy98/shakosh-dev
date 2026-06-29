@@ -368,7 +368,7 @@ static string get_navbar_html() {
 // ============================================================
 int main() {
     httplib::Server svr;
-    elevator elevator;
+    Elevator elevator;
 
     svr.set_pre_routing_handler([](const httplib::Request& req, httplib::Response& res) {
         set_security_headers(res);
