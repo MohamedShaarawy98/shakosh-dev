@@ -317,7 +317,7 @@ static string get_seo_meta(const string& title, const string& desc) {
 }
 
 static string get_navbar_html() {
-    const string logo_url = "https://raw.githubusercontent.com/MohamedShaarawi98/shakosh-dev/main/channels4_profile.jpg"; 
+    const string logo_url = "https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o"; 
     const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
 
     return "<nav class='navbar'>"
