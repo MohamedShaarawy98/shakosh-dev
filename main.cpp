@@ -74,12 +74,12 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
-                 "img-src 'self' https: data:; " 
+                 "img-src 'self' https: data: *.google.com *.googleusercontent.com; " // أضفنا تصريح صريح لدومينات صور جوجل هنا
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
                  "connect-src 'self'; "
-                 "frame-src https://www.youtube.com; "
+                 "frame-src https://www.youtube.com https://drive.google.com; " // أضفنا درايف هنا برضه عشان لو احتجت شيتات إكسل مستقبلاً
                  "frame-ancestors 'none'; "
                  "base-uri 'self'; "
                  "form-action 'self';";
