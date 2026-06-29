@@ -77,6 +77,7 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
+                 "img-src 'self' https: data:; " // السطر ده بيسمح بتحميل الصور الخارجية بنجاح
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
