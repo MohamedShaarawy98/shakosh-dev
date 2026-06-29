@@ -334,56 +334,20 @@ static string get_modern_blue_css() {
 //  بناء الهيدر — روابط مجمّعة داخل قائمة منبثقة واحدة (مزيد ▾)
 //  بدلاً من سرد كل الروابط في صف واحد
 // ============================================================
-static string get_navbar_html() {
-    const string logo_url = "https://raw.githubusercontent.com/MohamedShaarawi98/shakosh-dev/main/channels4_profile.jpg"; 
-    const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
-
-    return "<nav class='navbar'>"
-           "  <div class='nav-right'>"
-           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' style='width:100%; height:100%; border-radius:6px; object-fit:cover;'></span><span>ضربة شاكوش</span></a>"
-           "    <div class='nav-center desktop-only'>"
-           "      <a href='/' class='nav-link'>الرئيسية</a>"
-           "      <a href='/paths' class='nav-link'>مسارات</a>"
-           "      <a href='/paths' class='nav-link'>كورسات</a>"
-           "      <a href='#' class='nav-link'>مشاريع</a>"
-           "      <a href='#' class='nav-link'>كتب</a>"
-           "      <a href='/blog' class='nav-link'>مقالات</a>"
-           "      <a href='/support' class='nav-link'>أسئلة</a>"
-           "      <details class='nav-dropdown'>"
-           "        <summary>المزيد " + chevron_svg + "</summary>"
-           "        <div class='dropdown-panel'>"
-           "          <div class='dropdown-col'>"
-           "            <a href='/calculator'>أدوات (الحاسبة)</a>"
-           "            <a href='/contact'>التواصل</a>"
-           "            <a href='/support'>الدعم</a>"
-           "            <a href='/donate'>التبرع للموقع</a>"
-           "          </div>"
-           "        </div>"
-           "      </details>"
-           "    </div>"
-           "  </div>"
-           "  <div class='nav-left'>"
-           "    <a class='nav-icon' title='بحث'><svg viewBox='0 0 24 24'><path d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/></svg></a>"
-           "    <a class='nav-icon' title='الحساب الشخصي'><svg viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg></a>"
-           "    <details class='nav-dropdown mobile-menu mobile-only'>"
-           "      <summary class='nav-icon' title='القائمة'><svg viewBox='0 0 24 24'><path d='M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z'/></svg></summary>"
-           "      <div class='mobile-panel'>"
-           "        <a href='/'>الرئيسية</a>"
-           "        <a href='/paths'>مسارات</a>"
-           "        <a href='/paths'>كورسات</a>"
-           "        <a href='#'>مشاريع</a>"
-           "        <a href='#'>كتب</a>"
-           "        <a href='/blog'>مقالات</a>"
-           "        <a href='/support'>أسئلة</a>"
-           "        <div class='mobile-divider'></div>"
-           "        <a href='/calculator'>أدوات (الحاسبة)</a>"
-           "        <a href='/contact'>التواصل</a>"
-           "        <a href='/support'>الدعم</a>"
-           "        <a href='/donate'>التبرع للموقع</a>"
-           "      </div>"
-           "    </details>"
-           "  </div>"
-           "</nav>";
+static void set_csp(httplib::Response& res, const string& script_nonce = "") {
+    string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'nonce-" + script_nonce + "'; ");
+    string csp = "default-src 'self'; "
+                 "img-src 'self' https: data:; " // السطر ده بيسمح بتحميل الصور الخارجية بنجاح
+                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+                 "font-src https://fonts.gstatic.com; "
+                 + script_src +
+                 "connect-src 'self'; "
+                 "frame-src https://www.youtube.com; "
+                 "frame-ancestors 'none'; "
+                 "base-uri 'self'; "
+                 "form-action 'self';";
+    res.headers.erase("Content-Security-Policy");
+    res.set_header("Content-Security-Policy", csp);
 }
 // ============================================================
 //  الدالة الرئيسية
