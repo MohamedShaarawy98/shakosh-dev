@@ -74,12 +74,12 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
-                 "img-src 'self' https: data: *.google.com *.googleusercontent.com; " // أضفنا تصريح صريح لدومينات صور جوجل هنا
+                 "img-src 'self' data: https://media.darbat-shakosh.com; " // هنا قفلنا كل النطاقات الخارجية وسمحنا فقط بموقعك ونطاق الصور الموثوق بتاعك
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
                  "connect-src 'self'; "
-                 "frame-src https://www.youtube.com https://drive.google.com; " // أضفنا درايف هنا برضه عشان لو احتجت شيتات إكسل مستقبلاً
+                 "frame-src https://www.youtube.com; " // رجعنا اليوتيوب فقط وشيلنا جوجل درايف تماماً
                  "frame-ancestors 'none'; "
                  "base-uri 'self'; "
                  "form-action 'self';";
