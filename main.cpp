@@ -191,8 +191,7 @@ static vector<Lesson> get_lessons() {
             "نظرة عامة على لوحة التحكم والروابط الكهربائية وتغذية الفرامل ومغناطيس التهدئة والتوقف الفني.",
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
           // هنا تم تضمين خريطة المصعد بالرابط الاحترافي والأأمن من Cloudflare R2 وبأبعاد متناسقة (Responsive)
-          "<img src='https://media.darbat-shakosh.com/%D8%AA%D9%82%D8%B1%D9%8A%D8%B1%20%D8%A7_%D8%B9%D8%A7%D8%AF%D9%84%20(%D8%B4%D8%B1%D9%83%D8%A9%20%D9%82%D8%B7%D8%A7%D8%B9%20%D8%A7%D9%84%D8%AF%D8%B9%D9%85%20%D9%84%D9%84%D8%AA%D8%B7%D9%88%D9%8A%D8%B1%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A).pdf
-' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
+          "<img src='https://media.darbat-shakosh.com/IMG_20260618_101939_%D9%A0%D9%A4%D9%A2%D9%A0%D9%A1%D9%A0.jpg' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
     };
