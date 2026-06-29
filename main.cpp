@@ -183,14 +183,17 @@ static vector<Lesson> get_lessons() {
             "توصيل الكنترول وقفل دوائر الأمان - الدرس 2",
             "أهمية ترتيب خطوات تأسيس خطوط الكهرباء وربط دوائر السلسلة للامان وضمان الشغل النضيف والمطابق للمواصفات.",
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
+          "<img src='https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
+
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 2},
 
            {"darbat-shakosh-tow" ,"darbat" , "article", 
             "المبادئ الأولى لكهرباء وكروت المصاعد - الدرس 1",
             "نظرة عامة على لوحة التحكم والروابط الكهربائية وتغذية الفرامل ومغناطيس التهدئة والتوقف الفني.",
-         <img src='https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o' style='width:100%; max-width:600px; border-radius:8px; margin:20px 0; border:1px solid var(--border);' alt='خريطة المصعد'>
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
+          // هنا تم تضمين الخريطة الفنية الميكانيكية من جوجل درايف لتظهر بين الفقرات بشكل متناسق ومقاوم للشاشات المختلفة (Responsive)
+          "<img src='https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
     };
