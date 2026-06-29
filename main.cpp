@@ -335,8 +335,8 @@ static string get_modern_blue_css() {
 //  بدلاً من سرد كل الروابط في صف واحد
 // ============================================================
 static string get_navbar_html() {
-    const string hammer_svg = "<svg viewBox='0 0 24 24'><rect x='2.5' y='2.5' width='7.5' height='4.6' rx='1' transform='rotate(-45 6.25 4.8)'/><rect x='8.3' y='8.3' width='3' height='13' rx='1.2' transform='rotate(-45 9.8 14.8)'/></svg>";
-    const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
+const string logo_url = "https://github.com/MohamedShaarawy98/shakosh-dev/blob/main/channels4_profile.jpg";  
+  const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
 
     return "<nav class='navbar'>"
            "  <div class='nav-right'>"
