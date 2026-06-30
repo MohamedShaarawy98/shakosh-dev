@@ -1,7 +1,9 @@
-/*                      <  وَأَن لَّيْسَ لِلإِنسَانِ إِلاَّ مَا سَعَى * وَأَنَّ سَعْيَهُ سَوْفَ يُرَى * ثُمَّ يُجْزَاهُ الْجَزَاء الأَوْفَى  >
+/*                      <  وَأَن لَّيْسَ لِلإِنسَانِ إِلاَّ مَا سَعَى * وَأَنَّ سَعْيَهُ سوفَ يُرَى * ثُمَّ يُجْزَاهُ الْجَزَاء الأَوْفَى  >
 
                                        ============================================================
+                                       =                                                          =
                                        =                  منصة ضربة شاكوش الرقمية                 =
+                                       =                                                          =
                                        ============================================================
  */          
 
@@ -74,7 +76,7 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
-                 "img-src 'self' data: https://media.darbat-shakosh.com; " // هنا قفلنا كل النطاقات الخارجية وسمحنا فقط بموقعك ونطاق الصور الموثوق بتاعك
+                 "img-src 'self' data: https://media.darbat-shakosh.com https://flagcdn.com; " // هنا قفلنا كل النطاقات الخارجية وسمحنا فقط بموقعك ونطاق الصور الموثوق بتاعك والأعلام
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
@@ -191,7 +193,7 @@ static vector<Lesson> get_lessons() {
             "نظرة عامة على لوحة التحكم والروابط الكهربائية وتغذية الفرامل ومغناطيس التهدئة والتوقف الفني.",
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
           // هنا تم تضمين خريطة المصعد بالرابط الاحترافي والأأمن من Cloudflare R2 وبأبعاد متناسقة (Responsive)
-          "<img src='https://media.darbat-shakosh.com/IMG_20260618_101939_%D9%A0%D9%A4%D9%A2%D9%A0%D9%A1%D9%A0.jpg' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
+          "<img src='https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
     };
@@ -243,6 +245,12 @@ static string get_modern_blue_css() {
            ".desktop-only{display:flex;}"
            ".mobile-only{display:none;}"
            "@media (max-width:860px){.desktop-only{display:none;} .mobile-only{display:flex;} .navbar-brand span:last-child{font-size:1.05rem;}}"
+
+           // ===== شريط الأعلام الفاخر والمظلل تحت الهيدر مباشرة في أعلى اليمين (Responsive) =====
+           ".flags-strip{background:rgba(18,24,38,0.4); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:6px 28px; display:flex; justify-content:flex-start; align-items:center; position:relative; z-index:40;}"
+           ".flags-badge-box{display:flex; align-items:center; gap:12px; background:rgba(35,44,63,0.5); border:1px solid rgba(56,189,248,0.2); padding:5px 14px; border-radius:30px; box-shadow:inset 0 1px 2px rgba(255,255,255,0.05), 0 4px 10px rgba(0,0,0,0.3); margin-right:auto;}"
+           ".flag-img-unit{width:22px; height:15px; border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,0.4); object-fit:cover; display:block;}"
+           ".flag-img-sep{color:rgba(139,150,171,0.4); font-size:0.8rem; font-weight:300; user-select:none;}"
 
            // ===== قائمة الموبايل والتابلت الجانبية =====
            ".nav-left{display:flex; align-items:center; gap:18px;}"
@@ -302,28 +310,30 @@ static string get_modern_blue_css() {
            ".track-item:hover{border-color:var(--accent); transform:translateX(-3px);}"
            ".track-order{flex-shrink:0; width:34px; height:34px; border-radius:8px; background:var(--surface-2); color:var(--accent); font-family:var(--font-mono); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:0.95rem;}"
            ".track-item-title{color:#f3f4f6; font-weight:700; font-size:1.02rem; margin-bottom:4px;}"
-           ".track-item-summary{color:var(--text-muted); font-size:0.88rem; line-height:1.5;}"
 
            // ===== التذييل =====
            ".footer{margin-top:auto; padding:25px 0; font-size:15px; color:var(--text-muted); text-align:center; border-top:1px solid var(--border); background-color:var(--surface); font-weight:600;}"
-           "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .card::before, .card::after{display:none;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000; font-family:inherit;}}"
+           "@media print{.btn-print, .btn-secondary, h2, h3, .navbar, .flags-strip, .footer {display:none;} .card{box-shadow:none; padding:0; border:none; background:none; color:#000;} .card::before, .card::after{display:none;} .tbl th{background:#eee; color:#000;} .tbl td{color:#000; font-family:inherit;}}"
            "</style>";
 }
 
+// تعديل التايتل ليصبح "موقع ضربة شاكوش" وربط أيقونة التبويب برابط الـ R2 المباشر
 static string get_seo_meta(const string& title, const string& desc) {
-    return "<title>" + title + " | ضربة شاكوش</title>"
+    return "<title>موقع ضربة شاكوش</title>"
+           "<link rel='icon' type='image/jpeg' href='https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg'>"
            "<meta name='description' content='" + desc + "'>"
            "<meta name='keywords' content='حاسبة مقاسات المصاعد, كورس كهرباء المصاعد, تصفية أبعاد بئر المصعد, صيانة المصاعد, ميكانيكا المصاعد, ضربة شاكوش, هندسة المصاعد'>"
            "<meta name='robots' content='index, follow'>";
 }
 
+// تعديل نص الهيدر ليظهر "ضربة شاكوش فقط" بجانب لوجو الـ R2، وإضافة شريط الأعلام الفاخر بدقة متناهية تحت الهيدر مباشرة
 static string get_navbar_html() {
-    const string logo_url = "https://drive.google.com/uc?export=view&id=1qPc-5x2tzoYP7QV0gjJqpO-QleYlne1o"; 
+    const string logo_url = "https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg"; 
     const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
 
     return "<nav class='navbar'>"
            "  <div class='nav-right'>"
-           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' alt='لوجو ضربة شاكوش'></span><span>ضربة شاكوش</span></a>"
+           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' alt='لوجو ضربة شاكوش'></span><span>ضربة شاكوش فقط</span></a>"
            "    <div class='nav-center desktop-only'>"
            "      <a href='/' class='nav-link'>الرئيسية</a>"
            "      <a href='/paths' class='nav-link'>مسارات التعلّم</a>"
@@ -358,7 +368,15 @@ static string get_navbar_html() {
            "      </div>"
            "    </details>"
            "  </div>"
-           "</nav>";
+           "</nav>"
+           // شريط الأعلام الاحترافي المتناسق والخلفية المظللة بدقة بدون نصوص في أعلى اليمين
+           "<div class='flags-strip'>"
+           "  <div class='flags-badge-box'>"
+           "    <img src='https://flagcdn.com/w40/eg.png' class='flag-img-unit' alt='Egypt'>"
+           "    <span class='flag-img-sep'>|</span>"
+           "    <img src='https://flagcdn.com/w40/ps.png' class='flag-img-unit' alt='Gaza Palestine'>"
+           "  </div>"
+           "</div>";
 }
 
 // ============================================================
@@ -689,9 +707,10 @@ int main() {
 
     // 6️⃣ مركز المساعدة والأسئلة الشائعة للمصاعد
     svr.Get("/support", [](const httplib::Request&, httplib::Response& res) {
+        string meta = get_seo_meta("مركز المساعدة والأسئلة الشائعة الفنية للمصاعد.", "محتاج مساعدة في فهم كيفية حساب أبعاد الـ DBG الصافي وشواكيل التصفية؟");
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
-                      + get_modern_blue_css() + "</head><body>"
+                      + meta + get_modern_blue_css() + "</head><body>"
                       + get_navbar_html() +
                       "<div class='container' style='max-width:650px;'>"
                       "<div class='card'><h2>🛟 مركز الدعم والمساعدة الفنية</h2>"
@@ -708,9 +727,10 @@ int main() {
 
     // 7️⃣ صفحة دعم المنصة واستمرارية التطوير
     svr.Get("/donate", [](const httplib::Request&, httplib::Response& res) {
+        string meta = get_seo_meta("الموقع وحاسبة مقاسات بئر المصاعد مجاني تماماً لخدمة الوطن العربي.", "الموقع وحاسبة مقاسات بئر المصاعد مجاني تماماً لخدمة فنيي ومندوبي ومهندسي الوطن العربي.");
         string html = "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
                       "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
-                      + get_modern_blue_css() + "</head><body>"
+                      + meta + get_modern_blue_css() + "</head><body>"
                       + get_navbar_html() +
                       "<div class='container' style='max-width:650px;'>"
                       "<div class='card'><h2>❤️ المساهمة في دعم واستمرارية المنصة</h2>"
