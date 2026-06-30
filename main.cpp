@@ -76,12 +76,12 @@ static void set_security_headers(httplib::Response& res) {
 static void set_csp(httplib::Response& res, const string& script_nonce = "") {
     string script_src = script_nonce.empty() ? "script-src 'none'; " : ("script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com 'nonce-" + script_nonce + "'; ");
     string csp = "default-src 'self'; "
-                 "img-src 'self' data: https://media.darbat-shakosh.com https://flagcdn.com; " // هنا قفلنا كل النطاقات الخارجية وسمحنا فقط بموقعك ونطاق الصور الموثوق بتاعك والأعلام
+                 "img-src 'self' data: https://media.darbat-shakosh.com https://flagcdn.com; " // السماح بنطاق الصور والأعلام
                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
                  "font-src https://fonts.gstatic.com; "
                  + script_src +
                  "connect-src 'self'; "
-                 "frame-src https://www.youtube.com; " // رجعنا اليوتيوب فقط وشيلنا جوجل درايف تماماً
+                 "frame-src https://www.youtube.com; "
                  "frame-ancestors 'none'; "
                  "base-uri 'self'; "
                  "form-action 'self';";
@@ -192,7 +192,6 @@ static vector<Lesson> get_lessons() {
             "المبادئ الأولى لكهرباء وكروت المصاعد - الدرس 1",
             "نظرة عامة على لوحة التحكم والروابط الكهربائية وتغذية الفرامل ومغناطيس التهدئة والتوقف الفني.",
           "<p> أولاً: يتم التأكد من كهرباء المبنى وتغذية المصدر سواء كانت الفازة 220 فولت أو 380 فولت لعمل وتأسيس لوحة الكنترول على هذا الأساس السليم.</p>"
-          // هنا تم تضمين خريطة المصعد بالرابط الاحترافي والأأمن من Cloudflare R2 وبأبعاد متناسقة (Responsive)
           "<img src='https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg' style='width:100%; max-width:600px; display:block; border-radius:8px; margin:20px auto; border:1px solid var(--border);' alt='خريطة ومخطط المصعد الفني'>"
           "<p> ثانياً: تركيب الكنترول وتوصيل المحرك (الماكينة) وقفل دوائر السيفتي الرئيسية {الشوكة - الكالون - الاستوب} ثم اختبار حركة المصعد السريعة والبطيئة لضمان الاستجابة.</p>",
           "https://www.youtube.com/embed/ZluG-pfc2HY", 1}
@@ -246,9 +245,9 @@ static string get_modern_blue_css() {
            ".mobile-only{display:none;}"
            "@media (max-width:860px){.desktop-only{display:none;} .mobile-only{display:flex;} .navbar-brand span:last-child{font-size:1.05rem;}}"
 
-           // ===== شريط الأعلام الفاخر والمظلل تحت الهيدر مباشرة في أعلى اليمين (Responsive) =====
-           ".flags-strip{background:rgba(18,24,38,0.4); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:6px 28px; display:flex; justify-content:flex-start; align-items:center; position:relative; z-index:40;}"
-           ".flags-badge-box{display:flex; align-items:center; gap:12px; background:rgba(35,44,63,0.5); border:1px solid rgba(56,189,248,0.2); padding:5px 14px; border-radius:30px; box-shadow:inset 0 1px 2px rgba(255,255,255,0.05), 0 4px 10px rgba(0,0,0,0.3); margin-right:auto;}"
+           // ===== شريط الأعلام الفاخر والمظلل تحت الهيدر مباشرة في جهة اليسار (Responsive) =====
+           ".flags-strip{background:rgba(18,24,38,0.4); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:6px 28px; display:flex; justify-content:flex-end; align-items:center; position:relative; z-index:40;}"
+           ".flags-badge-box{display:flex; align-items:center; gap:12px; background:rgba(35,44,63,0.5); border:1px solid rgba(56,189,248,0.2); padding:5px 14px; border-radius:30px; box-shadow:inset 0 1px 2px rgba(255,255,255,0.05), 0 4px 10px rgba(0,0,0,0.3); margin-left:auto;}" // جعل الـ margin-left تلقائياً لنقلها لليسار
            ".flag-img-unit{width:22px; height:15px; border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,0.4); object-fit:cover; display:block;}"
            ".flag-img-sep{color:rgba(139,150,171,0.4); font-size:0.8rem; font-weight:300; user-select:none;}"
 
@@ -317,23 +316,23 @@ static string get_modern_blue_css() {
            "</style>";
 }
 
-// تعديل التايتل ليصبح "موقع ضربة شاكوش" وربط أيقونة التبويب برابط الـ R2 المباشر
+// التايتل المطلوب "موقع ضربة شاكوش" وربط أيقونة التبويب برابط الـ R2 المباشر
 static string get_seo_meta(const string& title, const string& desc) {
     return "<title>موقع ضربة شاكوش</title>"
-           "<link rel='icon' type='image/jpeg' href='https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg'>"
+           "<link rel='icon' type='image/jpeg' href='https://media.darbat-shakosh.com/channels4_profile%20(1).jpg'>"
            "<meta name='description' content='" + desc + "'>"
            "<meta name='keywords' content='حاسبة مقاسات المصاعد, كورس كهرباء المصاعد, تصفية أبعاد بئر المصعد, صيانة المصاعد, ميكانيكا المصاعد, ضربة شاكوش, هندسة المصاعد'>"
            "<meta name='robots' content='index, follow'>";
 }
 
-// تعديل نص الهيدر ليظهر "ضربة شاكوش فقط" بجانب لوجو الـ R2، وإضافة شريط الأعلام الفاخر بدقة متناهية تحت الهيدر مباشرة
+// تعديل نص الهيدر واللوجو، وإضافة كبسولة الأعلام الفاخرة بدون نصوص في جهة اليسار بالترتيب المكتوب
 static string get_navbar_html() {
-    const string logo_url = "https://media.darbat-shakosh.com/IMG_20260618_101939_-٤٢٠١٠.jpg"; 
+    const string logo_url = "https://media.darbat-shakosh.com/channels4_profile%20(1).jpg"; 
     const string chevron_svg = "<svg class='chevron' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>";
 
     return "<nav class='navbar'>"
            "  <div class='nav-right'>"
-           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' alt='لوجو ضربة شاكوش'></span><span>ضربة شاكوش فقط</span></a>"
+           "    <a href='/' class='navbar-brand'><span class='brand-mark'><img src='" + logo_url + "' alt='لوجو ضربة شاكوش'></span><span>ضربة شاكوش </span></a>"
            "    <div class='nav-center desktop-only'>"
            "      <a href='/' class='nav-link'>الرئيسية</a>"
            "      <a href='/paths' class='nav-link'>مسارات التعلّم</a>"
@@ -369,12 +368,14 @@ static string get_navbar_html() {
            "    </details>"
            "  </div>"
            "</nav>"
-           // شريط الأعلام الاحترافي المتناسق والخلفية المظللة بدقة بدون نصوص في أعلى اليمين
+           // شريط الأعلام الفاخر الموجه أوتوماتيكياً لجهة اليسار (Left Side) وبدون أي كلمات وبترتيب (فلسطين -> مصر -> السعودية)
            "<div class='flags-strip'>"
            "  <div class='flags-badge-box'>"
+           "    <img src='https://flagcdn.com/w40/ps.png' class='flag-img-unit' alt='Gaza Palestine'>"
+           "    <span class='flag-img-sep'>|</span>"
            "    <img src='https://flagcdn.com/w40/eg.png' class='flag-img-unit' alt='Egypt'>"
            "    <span class='flag-img-sep'>|</span>"
-           "    <img src='https://flagcdn.com/w40/ps.png' class='flag-img-unit' alt='Gaza Palestine'>"
+           "    <img src='https://flagcdn.com/w40/sa.png' class='flag-img-unit' alt='Saudi Arabia'>"
            "  </div>"
            "</div>";
 }
@@ -421,7 +422,7 @@ int main() {
                       "  <a href='/paths' class='nav-card'><h3>🧭 مسارات الكورسات والتعلم</h3><p>اكتشف مسار التأسيس ميكانيكياً، وكورس كهرباء المصاعد الشامل لتوصيل اللوحات والكنترولات خطوة بخطوة.</p></a>"
                       "</div>"
                       "</div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -446,7 +447,7 @@ int main() {
                       "<div class='f-group'><label>🏠 ارتفاع الدور الأخير من بلاطة الوقف للجريد Overhead (CM):</label><input type='number' name='overhead' required min='100' max='800' value='400'></div>"
                       "<button type='submit'>🏛️ استخراج مقاسات الصاعدة الهندسية وتوليد المقايسة</button></form>"
                       "</div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -487,12 +488,10 @@ int main() {
         ostringstream os;
         os << "<html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>"
            "<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap' rel='stylesheet'>"
-           // استدعاء مكتبة توليد ملفات الـ PDF الاحترافية فورا
            "<script src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'></script>"
            + get_modern_blue_css() + "</head><body>"
            << get_navbar_html()
            << "<div class='container' style='max-width:750px;'>"
-           // الـ ID هنا مخصص لحفظ منطقة التقرير فقط داخل الـ PDF المطبوع
            << "<div class='card' id='pdf-area'><h2>📋 تقرير تصفية المقاسات النهائي المعتمد</h2>"
            << "<div class='sub-title' style='margin-bottom:20px;'>منصة ضربة شاكوش لحساب أبعاد الكابينة ومقايسات بئر المصاعد الإنشائية:</div>"
            << "<div class='table-container'><table class='tbl'>"
@@ -506,13 +505,12 @@ int main() {
            << "<tr><th>إجمالي مشوار البئر والارتفاع الرأسي المحسوب:</th><td style='color:#38bdf8;'>" << h << " متر طولي</td></tr>"
            << "</table></div>"
            << "<p style='margin-top:25px; font-size:0.85rem; color:var(--text-muted); text-align:center;'>تمت التصفية والمطابقة آلياً بالاعتماد على خوارزميات التصفية القياسية للمصاعد.</p>"
-           << "</div>" // إغلاق منطقة الـ PDF
+           << "</div>" 
            << "<div class='actions' style='max-width:750px; margin: 20px auto 0 auto; padding:0 40px;'>"
            << "  <button class='btn-print' id='pBtn'>📥 تحميل التقرير كملف PDF مخصص</button>"
            << "  <a class='btn-secondary' href='/calculator'>🔄 تصفية مقاسات بئر جديد</a>"
            << "</div></div>"
-           << "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
-           // كود الـ JavaScript السحري المسؤول عن تصدير الـ PDF بجودة عالية وتنسيق هوية الموقع
+           <<"<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
            << "<script nonce='" << nonce << "'>"
            << "  document.getElementById('pBtn').addEventListener('click', function(){"
            << "    var element = document.getElementById('pdf-area');"
@@ -553,7 +551,7 @@ int main() {
                       "<p>مقالات هندسية وفيديوهات متخصصة تشرح التصفية الكهربائية والميكانيكية للمصاعد خطوة بخطوة للشغل النظيف والأمان.</p></div>"
                       "<div class='grid-nav'>" + cards.str() + "</div>"
                       "</div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -605,7 +603,7 @@ int main() {
                       + body.str() +
                       "<div class='actions'><a class='btn-secondary' href='/blog'>⬅️ العودة للمكتبة والشروحات</a></div>"
                       "</div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -630,7 +628,7 @@ int main() {
                       "<p>كل مسار مخصص لجمع وتدريس الحلقات والدروس بالترتيب الصحيح لضمان الانتقال السلس من مرحلة التأسيس إلى مرحلة الاحتراف.</p></div>"
                       "<div class='grid-nav'>" + cards.str() + "</div>"
                       "</div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -682,7 +680,7 @@ int main() {
                       "<div class='track-list'>" + items.str() + "</div>"
                       "<div class='actions' style='margin-top:25px;'><a class='btn-secondary' href='/paths'>⬅️ العودة لكافة المسارات</a></div>"
                       "</div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -700,7 +698,7 @@ int main() {
                       "<a class='btn-action' href='mailto:support@darbat-shakosh.com' style='margin-bottom:14px; display:block;'>📧 راسلنا على البريد الإلكتروني الرسمي للمنصة</a>"
                       "<p style='color:#8b96ab; font-size:0.9rem; text-align:center;'>المراسلات يتم الرد عليها ومراجعتها من المهندس المختص خلال 24 ساعة.</p>"
                       "</div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -720,7 +718,7 @@ int main() {
                       "  <a class='btn-print' href='/blog'>❓ تصفح الشروحات</a>"
                       "  <a class='btn-secondary' href='/contact'>📩 فتح تذكرة دعم</a>"
                       "</div></div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
@@ -737,7 +735,7 @@ int main() {
                       "<div class='sub-title'>الموقع وحاسبة مقاسات بئر المصاعد مجاني تماماً لخدمة فنيي ومندوبي ومهندسي الوطن العربي، مساهمتك تساعد في تطوير الخوادم وزيادة جودة الشروحات الميكانيكية.</div>"
                       "<a class='btn-action' href='/contact' style='display:block;'>💳 استعراض وسائل وطرق المساهمة المتاحة</a>"
                       "</div></div>"
-                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إشراف وإعداد المهندس محمد الشعراوي</div>"
+                      "<div class='footer'>منصة ضربة شاكوش الفنية © 2026 - إنشاء محمد الشعراوي</div>"
                       "</body></html>";
         res.set_content(html, "text/html; charset=utf-8");
     });
